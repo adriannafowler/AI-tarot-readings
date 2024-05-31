@@ -1,0 +1,41 @@
+# volumes:
+#     django:
+#     frontend:
+#     external: true
+
+services:
+  django:
+    build:
+      context: api
+      dockerfile: Dockerfile.dev
+    ports:
+      - 8100:8000
+    volumes:
+      - ./api:/app
+
+  frontend:
+    image: node:lts-bullseye
+    working_dir: /app
+    command: bash -c "npm install && npm run dev"
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3100:3000"
+    environment:
+      # HOST_OS: ${OS}
+      NODE_ENV: development
+      HOST: "0.0.0.0"
+      PUBLIC_URL: http://localhost:3000
+      VITE_APP_API_HOST: ${VITE_APP_API_HOST}
+  # tarot-api:
+  #   build:
+  #     context: ./api
+  #     dockerfile: ./Dockerfile.dev
+  #   ports:
+  #     - "8100:8000"
+  #   volumes:
+  #     - ./tarot:/app
+  #   environment:
+  #     DATABASE_URL: postgres://service:password@database:5432/tarot
+  #     WAIT_HOSTS: database:5432
+  #     WAIT_TIMEOUT: 240
