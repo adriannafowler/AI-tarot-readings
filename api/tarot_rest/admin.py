@@ -1,3 +1,11 @@
 from django.contrib import admin
+from .models import Card, Deck
 
-# Register your models here.
+
+class CardInline(admin.TabularInline):
+    model = Card
+    extra = 1
+
+@admin.register(Deck)
+class DeckAdmin(admin.ModelAdmin):
+    inlines = [CardInline]
