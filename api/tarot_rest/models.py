@@ -6,7 +6,7 @@ class Deck(models.Model):
     exclude_negative = models.BooleanField(default=True)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name="recipes",
+        related_name="decks",
         on_delete=models.CASCADE,
         null=True,
     )

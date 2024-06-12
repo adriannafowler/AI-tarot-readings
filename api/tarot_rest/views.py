@@ -37,3 +37,52 @@ class DeckListView(APIView):
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class DeckDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+    @swagger_auto_schema(
+        responses={
+            201: openapi.Response('Deck updated successfully', DeckSerializer),
+            401: 'Unauthorized',
+            404: 'Not Found'
+        },
+        security=[{'Bearer': []}]
+    )
+
+    def get(self, request, id):
+        try:
+            deck = Deck.objects.get(id=id, user=request.user)
+            serializer = DeckSerializer(deck)
+            return Response({"deck": serializer.data}, status=status.HTTP_200_OK)
+        except Deck.DoesNotExist:
+            return Response({"detail": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
+
+    @swagger_auto_schema(
+        request_body=DeckSerializer,
+        responses={
+            201: openapi.Response('Deck updated successfully', DeckSerializer),
+            400: 'Invalid data',
+            401: 'Unauthorized'
+        },
+        security=[{'Bearer': []}]
+    )
+
+    def put(self, request, id):
+        try:
+            deck = Deck.objects.get(id=id, user=request.user)
+        except Deck.DoesNotExist:
+            return Response({"detail": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = DeckSerializer(deck, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"deck": serializer.data}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        try:
+            deck = Deck.objects.get(id=id, user=request.user)
+            count, _ = deck.delete()
+            return Response({"deleted": count > 0})
+        except Deck.DoesNotExist:
+            return Response({"detail": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
