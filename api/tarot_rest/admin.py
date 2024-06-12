@@ -8,4 +8,8 @@ class CardInline(admin.TabularInline):
 
 @admin.register(Deck)
 class DeckAdmin(admin.ModelAdmin):
+    list_display = [
+        "name",
+        "id"
+    ]
     inlines = [CardInline]
