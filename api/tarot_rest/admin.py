@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Card, Deck
+from .models import Card, Deck, Reading
 
 
 class CardInline(admin.TabularInline):
@@ -13,3 +13,11 @@ class DeckAdmin(admin.ModelAdmin):
         "id"
     ]
     inlines = [CardInline]
+
+@admin.register(Reading)
+class ReadingAdmin(admin.ModelAdmin):
+    list_display = [
+        "id",
+        "title",
+        "time_stamp"
+    ]

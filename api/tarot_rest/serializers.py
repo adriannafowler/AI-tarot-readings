@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Deck, Card
+from .models import Deck, Card, Reading
 
 class DeckSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,4 +9,9 @@ class DeckSerializer(serializers.ModelSerializer):
 class CardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
+        fields = '__all__'
+
+class ReadingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reading
         fields = '__all__'

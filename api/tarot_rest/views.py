@@ -2,10 +2,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from .models import Deck, Card
-from .serializers import DeckSerializer, CardSerializer
+from .models import Deck, Card, Reading
+from .serializers import DeckSerializer, CardSerializer, ReadingSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from .acls import get_reading
+import random
 
 class DeckListView(APIView):
     permission_classes = [IsAuthenticated]
@@ -79,7 +81,7 @@ class DeckDetailView(APIView):
             serializer.save()
             return Response({"deck": serializer.data}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
     @swagger_auto_schema(
     responses={
         200: openapi.Response('Deck deleted', DeckSerializer),
@@ -190,3 +192,126 @@ class CardDetailView(APIView):
             return Response({"deleted": count > 0})
         except Card.DoesNotExist:
             return Response({"card": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
+
+class ReadingListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(
+        responses={
+            200: openapi.Response('List of user readings', ReadingSerializer(many=True)),
+            401: 'Unauthorized'
+        },
+        security=[{'Bearer': []}]
+    )
+    def get(self, request):
+        readings = Reading.objects.filter(user=request.user)
+        serializer = ReadingSerializer(readings, many=True)
+        return Response({"readings": serializer.data}, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'deck_id': openapi.Schema(type=openapi.TYPE_INTEGER, description='ID of the deck'),
+            },
+            required=['deck_id']
+        ),
+        responses={
+            201: openapi.Response('Reading created successfully', ReadingSerializer),
+            400: 'Invalid data',
+            401: 'Unauthorized'
+        },
+        security=[{'Bearer': []}]
+    )
+    def post(self, request):
+        deck_id = request.data.get('deck_id')
+        if not deck_id:
+            return Response({"deck_id": "This field is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            deck = Deck.objects.get(id=deck_id, user=request.user)
+        except Deck.DoesNotExist:
+            return Response({"detail": "Deck not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        cards = Card.objects.filter(deck=deck)
+        if cards.count() < 3:
+            return Response({"detail": "Not enough cards in the deck."}, status=status.HTTP_400_BAD_REQUEST)
+        random_cards = random.sample(list(cards), 3)
+        d = {}
+        chosen_card_ids = []
+        for i in range(len(random_cards)):
+            d[f"card{i + 1}"] = f"{random_cards[i].name} - {random_cards[i].description}"
+            chosen_card_ids.append(random_cards[i].id)
+        reading = get_reading(d)
+
+        reading_data = {
+            "title": request.data.get("title"),
+            "reading": reading,
+            "cards": chosen_card_ids,
+            "user": request.user.id
+        }
+
+        serializer = ReadingSerializer(data=reading_data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ReadingDetailView(APIView):
+    @swagger_auto_schema(
+        responses={
+            201: openapi.Response('Reading updated successfully', ReadingSerializer),
+            401: 'Unauthorized',
+            404: 'Not Found'
+        },
+        security=[{'Bearer': []}]
+    )
+
+    def get(self, request, id):
+        try:
+            reading = Reading.objects.get(id=id, user=request.user)
+            serializer = ReadingSerializer(reading)
+            return Response({"reading": serializer.data}, status=status.HTTP_200_OK)
+        except Deck.DoesNotExist:
+            return Response({"reading detail": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
+
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'title': openapi.Schema(type=openapi.TYPE_STRING, description='Title of the reading'),
+            },
+            required=['title']
+        ),
+        responses={
+            200: openapi.Response('Reading updated successfully', ReadingSerializer),
+            400: 'Invalid data',
+            401: 'Unauthorized',
+            404: 'Not Found'
+        },
+        security=[{'Bearer': []}]
+    )
+
+    def patch(self, request, id):
+        try:
+            reading = Reading.objects.get(id=id, user=request.user)
+        except Reading.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        title = request.data.get('title')
+        if not title:
+            return Response({"title": "This field is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        reading.title = title
+        reading.save()
+
+        serializer = ReadingSerializer(reading)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, id):
+        try:
+            reading = Reading.objects.get(id=id, user=request.user)
+            count, _ = reading.delete()
+            return Response({"deleted": count > 0})
+        except Reading.DoesNotExist:
+            return Response({"reading detail": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
