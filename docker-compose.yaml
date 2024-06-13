@@ -1,17 +1,19 @@
-# volumes:
-#     django:
-#     frontend:
-#     external: true
+version: '3.8'
 
 services:
   django:
     build:
       context: api
       dockerfile: Dockerfile.dev
+    env_file:
+      - .env
+
     ports:
-      - 8100:8000
+      - "8100:8000"
     volumes:
       - ./api:/app
+    depends_on:
+      - postgres
 
   frontend:
     image: node:lts-bullseye
@@ -22,20 +24,20 @@ services:
     ports:
       - "3100:3000"
     environment:
-      # HOST_OS: ${OS}
+      HOST_OS: ${OS}
       NODE_ENV: development
       HOST: "0.0.0.0"
       PUBLIC_URL: http://localhost:3000
       VITE_APP_API_HOST: ${VITE_APP_API_HOST}
-  # tarot-api:
-  #   build:
-  #     context: ./api
-  #     dockerfile: ./Dockerfile.dev
-  #   ports:
-  #     - "8100:8000"
-  #   volumes:
-  #     - ./tarot:/app
-  #   environment:
-  #     DATABASE_URL: postgres://service:password@database:5432/tarot
-  #     WAIT_HOSTS: database:5432
-  #     WAIT_TIMEOUT: 240
+
+  postgres:
+    image: postgres:13
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - tarot_postgres_data:/var/lib/postgresql/data/
+
+volumes:
+  tarot_postgres_data:
