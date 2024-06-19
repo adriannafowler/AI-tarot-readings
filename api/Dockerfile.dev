@@ -6,4 +6,5 @@ WORKDIR /deps
 COPY requirements.txt requirements.txt
 RUN python -m pip install -r requirements.txt
 WORKDIR /app
-CMD /wait && uvicorn main:app --reload --host 0.0.0.0
+COPY . .
+CMD /wait && python manage.py runserver 0.0.0.0:8000
