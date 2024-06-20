@@ -2,7 +2,7 @@ import React from "react";
 import './accounts.css';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LoginBackground from "./background/loginBG.jsx";
+import SignupBackground from "./background/signupBG.jsx";
 
 
 function SignUp() {
@@ -68,7 +68,7 @@ function SignUp() {
     return (
         <>
         <div>
-            <LoginBackground />
+            <SignupBackground />
         </div>
         <div className="login-container">
             <form onSubmit={handleSignUp}>

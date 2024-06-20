@@ -6,6 +6,7 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import LogIn from "./accounts/login";
 import SignUp from "./accounts/signup";
+import Decks from "./decks/decks_list";
 
 // const URL = import.meta.env.VITE_APP_API_HOST
 // if (!URL) {
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" index element={<HomePage />} />
           <Route path="login/" index element={<LogIn />} />
           <Route path="signup/" index element={<SignUp />} />
+          <Route path="decks/" index element={<Decks />} />
         </Routes>
       </BrowserRouter>
     </>

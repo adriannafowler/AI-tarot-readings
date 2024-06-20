@@ -1,0 +1,51 @@
+/* accounts.css */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #f8f9fa;
+}
+
+.menu-icon {
+    cursor: pointer;
+    width: 75px;
+    height: auto;
+}
+
+.menu {
+    position: absolute;
+    top: 3rem;
+    left: 0;
+    background-color: #ffffff00;
+    border-radius: 8px;
+    list-style: none;
+    padding: 1rem;
+    z-index: 1000;
+}
+
+.menu li {
+    margin: 0.5rem 0;
+}
+
+.right-nav-items ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.right-nav-items li {
+    margin: 0;
+}
+
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #007bff;
+}
+
+button:hover {
+    text-decoration: underline;
+}
