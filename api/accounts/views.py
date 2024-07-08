@@ -2,61 +2,72 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.authtoken.models import Token
 from django.contrib.auth import login, logout
 from accounts.serializers import LoginSerializer, UserSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
 import logging
+from rest_framework.exceptions import ValidationError
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 logger = logging.getLogger(__name__)
 
 class LoginView(APIView):
     @swagger_auto_schema(
-    request_body=LoginSerializer,
-    responses={
-        200: openapi.Response('Login successful', UserSerializer),
-        400: 'Invalid credentials'
+        request_body=LoginSerializer,
+        responses={
+            200: openapi.Response('Login successful', UserSerializer),
+            400: 'Invalid credentials'
         }
     )
     def post(self, request):
+        logger.debug(f"Login attempt with data: {request.data}")
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data['user']
+            refresh = RefreshToken.for_user(user)
             login(request, user)
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key, 'user': UserSerializer(user).data})
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'user': UserSerializer(user).data
+            })
+        logger.debug(f"Login failed with errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LogoutView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class SignUpView(APIView):
     @swagger_auto_schema(
-    request_body=UserSerializer,
-    responses={
-        201: openapi.Response('User created successfully', UserSerializer),
-        400: 'Invalid data'
+        request_body=UserSerializer,
+        responses={
+            201: openapi.Response('User created successfully', UserSerializer),
+            400: 'Invalid data'
         }
     )
     def post(self, request):
         serializer = UserSerializer(data=request.data)
-        logger.debug('SERIALIZER!!!!!:', serializer)
+        logger.debug(f"Serializer data: {serializer.initial_data}")
         if serializer.is_valid():
-            user = User.objects.create_user(**serializer.validated_data)
-            return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
+            try:
+                user = serializer.save()
+                refresh = RefreshToken.for_user(user)
+                return Response({
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                    'user': UserSerializer(user).data
+                }, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                logger.error(f"Error saving user: {e}")
+                raise ValidationError(f"Error creating user: {e}")
+        else:
+            logger.debug(f"Serializer errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class UserInfoView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        logger.debug(f"USER: {request.user}")
-        logger.debug(f"AUTH: {request.auth}")
-        user = request.user
-        logger.debug("USER!!!!:", UserSerializer(user).data)
-        return Response(UserSerializer(user).data)
-        # return Response(status=status.HTTP_401_UNAUTHORIZED)

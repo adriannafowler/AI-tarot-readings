@@ -37,8 +37,10 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'corsheaders',
+    # 'rest_framework',
+    # 'rest_framework.authtoken',
     'rest_framework',
-    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,8 +48,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "tarot_rest.apps.TarotRestConfig",
+    'accounts.apps.AccountsConfig',
     'drf_yasg',
 ]
+
+CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
@@ -55,13 +60,21 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost"
 ]
 
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    'Authorization',
+    'Content-Type',
+]
 
-
-# CSRF_TRUSTED_ORIGINS = [
-#     "http://localhost:3000",
+# CORS_ORIGIN_WHITELIST = [
+#     'http://localhost:3100',
 #     "http://localhost:3100",
+#     "http://localhost"
 # ]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:3100",
+]
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
@@ -76,25 +89,42 @@ SWAGGER_SETTINGS = {
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
+    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    ],
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.TokenAuthentication',
+#         # 'rest_framework.authentication.SessionAuthentication',
+#     ],
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.IsAuthenticated',
+#     ],
+# }
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
+    'SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
+}
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     "django.middleware.security.SecurityMiddleware",
-    'corsheaders.middleware.CorsMiddleware',
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    # "django.middleware.csrf.CsrfViewMiddleware",
+    # "django.middleware.csrf.CsrfViewMiddleware", # Uncomment if CSRF is needed
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = "tarot_project.urls"
@@ -132,11 +162,11 @@ WSGI_APPLICATION = "tarot_project.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("POSTGRES_DB") ,
-        'USER': os.getenv("POSTGRES_USER"),
-        'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
-        'HOST': 'postgres',
-        'PORT': '5432',
+        'NAME': os.getenv("POSTGRES_DB", "tarot_db"),
+        'USER': os.getenv("POSTGRES_USER", "tarot_user"),
+        'PASSWORD': os.getenv("POSTGRES_PASSWORD", "password"),
+        'HOST': os.getenv("POSTGRES_HOST", "localhost"),  # Use 'localhost' or the service name in docker-compose.yml
+        'PORT': os.getenv("POSTGRES_PORT", '5432'),
     }
 }
 
@@ -182,18 +212,41 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#         },
+#     },
+# }
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
         'console': {
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
         },
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'INFO',
+        },
+        'django.utils.autoreload': {
+            'handlers': ['console'],
+            'level': 'ERROR',  # Change this to 'ERROR' or 'WARNING'
+            'propagate': False,
         },
     },
 }
+

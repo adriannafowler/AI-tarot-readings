@@ -1,93 +1,68 @@
 import { NavLink } from "react-router-dom";
-import menuIcon from "./assets/menu_icon.svg"
-import { useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-
+import menuIcon from "./assets/menu_icon.svg";
+import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 function NavBar() {
-    const [userInfo, setUserInfo] = useState(null)
+    const [userInfo, setUserInfo] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        // const csrfToken = getCookie('csrftoken');
-         // A function to get the CSRF token from cookies
+        const fetchUserInfo = async () => {
+            const token = localStorage.getItem('token');
+            console.log("Retrieved token from localStorage:", token);
 
-        console.log("TOKEN:", token);  // Log token for debugging
-        if (token) {
-            fetch(`${import.meta.env.VITE_APP_API_HOST}/api/userinfo/`, {
-                headers: {
-                    'Authorization': `Token ${token}`,
-                    // 'X-CSRFToken': csrfToken,  // Add CSRF token header
-                },
-                credentials: 'include'  // Include credentials if needed
-            })
-            .then(response => {
-                console.log("RESPONSE:", response);  // Log response for debugging
-                if (response.ok) {
-                    return response.json();
-                } else if (response.status === 401 || response.status === 403) {
-                    navigate('/');
-                    alert('You must be logged in to access tarot decks');
-                    return null;
-                } else {
-                    throw new Error('Error fetching user info');
-                }
-            })
-            .then(data => {
-                console.log("DATA:", data)
-                if (data) {
-                    setUserInfo(data);
-                }
-            })
-            .catch(error => console.error('Error fetching user info:', error));
-        } else {
-            navigate('/');
-            alert('You must be logged in to access tarot decks');
-        }
+            if (!token) {
+                navigate('/');
+                alert('You must be logged in to access this page');
+                return;
+            }
+
+            const user = localStorage.getItem('user');
+            if (user) {
+                setUserInfo(JSON.parse(user));
+                console.log("USER INFO:", userInfo)
+            }
+            setLoading(false);
+        };
+
+        fetchUserInfo();
     }, [navigate]);
 
-    // function getCookie(name) {
-    //     let cookieValue = null;
-    //     if (document.cookie && document.cookie !== '') {
-    //         const cookies = document.cookie.split(';');
-    //         for (let i = 0; i < cookies.length; i++) {
-    //             const cookie = cookies[i].trim();
-    //             if (cookie.substring(0, name.length + 1) === (name + '=')) {
-    //                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-    //                 break;
-    //             }
-    //         }
-    //     }
-    //     return cookieValue;
-    // }
-
-    const handleLogout = () => {
+    const handleLogout = async () => {
         const token = localStorage.getItem('token');
-        if (token) {
-            fetch(`${import.meta.env.VITE_APP_API_HOST}/api/logout/`, {
+        if (!token) return;
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_APP_API_HOST}/api/logout/`, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Token ${token}`
+                    'Bearer': `Token ${token}`,
                 }
-            })
-            .then(response => {
-                if (response.ok) {
-                    localStorage.removeItem('token');
-                    setUserInfo(null);
-                    navigate('/login');
-                } else {
-                    console.error('Logout failed');
-                }
-            })
-            .catch(error => console.error('Error during logout:', error));
+            });
+
+            if (!response.ok) {
+                console.error('Logout failed');
+                return;
+            }
+
+            localStorage.removeItem('token');
+            setUserInfo(null);
+            navigate('/login');
+        } catch (error) {
+            console.error('Error during logout:', error);
         }
     };
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
     };
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>{error}</div>;
 
     return (
         <nav className="navbar">
@@ -114,7 +89,7 @@ function NavBar() {
                 </ul>
             </div>
         </nav>
-    )
+    );
 }
 
-export default NavBar
+export default NavBar;

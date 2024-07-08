@@ -8,8 +8,14 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from .acls import get_reading
 import random
+# from rest_framework.authtoken.models import Token
+import logging
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
+logger = logging.getLogger(__name__)
 
 class DeckListView(APIView):
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
@@ -20,9 +26,15 @@ class DeckListView(APIView):
         security=[{'Bearer': []}]
     )
     def get(self, request):
-        decks = Deck.objects.filter(user=request.user)
-        serializer = DeckSerializer(decks, many=True)
-        return Response({"decks": serializer.data}, status=status.HTTP_200_OK)
+        logger.debug(f"USER: {request.user}")
+        logger.debug(f"AUTH HEADER: {request.headers.get('Authorization')}")
+        logger.debug(f"USER AUTHENTICATED?: {request.user.is_authenticated}")
+        if request.user.is_authenticated:
+            decks = Deck.objects.filter(user=request.user)
+            serializer = DeckSerializer(decks, many=True)
+            return Response({"decks": serializer.data}, status=status.HTTP_200_OK)
+        logger.debug("User not authenticated")
+        return Response({"detail": "Not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
 
     @swagger_auto_schema(
         request_body=DeckSerializer,
@@ -41,6 +53,7 @@ class DeckListView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DeckDetailView(APIView):
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
@@ -99,6 +112,7 @@ class DeckDetailView(APIView):
             return Response({"detail": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
 
 class CardListView(APIView):
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
@@ -137,6 +151,7 @@ class CardListView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CardDetailView(APIView):
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
@@ -194,6 +209,7 @@ class CardDetailView(APIView):
             return Response({"card": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
 
 class ReadingListView(APIView):
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
@@ -258,6 +274,9 @@ class ReadingListView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ReadingDetailView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     @swagger_auto_schema(
         responses={
             201: openapi.Response('Reading updated successfully', ReadingSerializer),

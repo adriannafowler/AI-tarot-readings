@@ -1,6 +1,21 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.authentication import TokenAuthentication
+from django.contrib.auth.models import User
+from rest_framework import status
+from rest_framework.response import Response
+from django.contrib.auth import login, logout
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+from rest_framework.permissions import IsAuthenticated
+import logging
+from rest_framework.exceptions import ValidationError
+from rest_framework.authentication import TokenAuthentication
+
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -39,4 +54,3 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
-    

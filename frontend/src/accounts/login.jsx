@@ -21,13 +21,23 @@ function LogIn() {
                 },
                 body: JSON.stringify({ username, password})
             })
+
+            console.log('RESPONSE:', response);
+
         if (!response.ok) {
-            throw new Error('Invalid credentials')
+            const errorData = await response.json();
+            console.log('Error Data:', errorData); // Debugging
+            throw new Error('Invalid credentials');
         }
         const data = await response.json()
-        localStorage.setItem('token', data.token)
+        console.log("LOGIN RESPONSE DATA:", data);
+        localStorage.setItem('token', data.access);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        console.log("Stored token in localStorage:", localStorage.getItem('token'));
+        console.log("Stored user in localStorage:", localStorage.getItem('user'));
         navigate('/')
         } catch (error) {
+            console.error('Login Error:', error);
             setError('Invalid credentials')
         }
         }
