@@ -7,6 +7,8 @@ import "./App.css";
 import LogIn from "./accounts/login";
 import SignUp from "./accounts/signup";
 import Decks from "./decks/decks_list";
+import DeckDetail from "./decks/deck_detail"
+import DeckEdit from "./decks/deck_edit";
 
 // const URL = import.meta.env.VITE_APP_API_HOST
 // if (!URL) {
@@ -23,7 +25,11 @@ function App() {
           <Route path="/" index element={<HomePage />} />
           <Route path="login/" index element={<LogIn />} />
           <Route path="signup/" index element={<SignUp />} />
-          <Route path="decks/" index element={<Decks />} />
+          <Route path="decks/">
+            <Route index element={<Decks />} />
+            <Route path=":id/" element={<DeckDetail />} />
+            <Route path=":id/edit/" element={<DeckEdit />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </>

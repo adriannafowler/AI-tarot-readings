@@ -17,10 +17,10 @@ function HomePage(){
             <header>
                 <ul>
                     <li>
-                    <button id="login_button"><img src={login} onClick={() => navigate('/login')} /></button>
+                    <button id="login_button"><img className='home-img' src={login} onClick={() => navigate('/login')} /></button>
                     </li>
                     <li>
-                    <button id="signup_button"><img src={signup} onClick={() => navigate('/signup')} /></button>
+                    <button id="signup_button"><img className='home-img' src={signup} onClick={() => navigate('/signup')} /></button>
                     </li>
                 </ul>
             </header>

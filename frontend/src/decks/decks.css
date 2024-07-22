@@ -1,10 +1,11 @@
-/* accounts.css */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    background-color: #f8f9fa;
+@font-face {
+    font-family: 'PottaOne';
+    src: url('../assets/fonts/PottaOne-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Abril';
+    src: url('../assets/fonts/AbrilFatface-Regular.ttf');
 }
 
 .menu-icon {
@@ -48,4 +49,294 @@ button {
 
 button:hover {
     text-decoration: underline;
+}
+
+.flex-grid {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    justify-content: flex-start; /* Center the items horizontally */
+}
+
+.flex-grid .col {
+    flex: 1 1 300px;
+    max-width: 100%;
+    margin: 25px;
+}
+
+.deck-img {
+    height: 300px;
+    width: 188px;
+}
+
+#card {
+    position: relative; /* Ensure the pseudo-element is positioned correctly */
+    background-color: rgba(255, 255, 255, 0);
+    overflow: visible;
+    transition: transform 0.3s ease; /* Smoother transition */
+    width: 225px;
+    height: 350px;
+    border-radius: 35px;
+    padding: 10px;
+    background: linear-gradient(to top, rgba(214, 186, 235, .5), rgba(238, 220, 254, .5), rgba(214, 186, 235, .5));
+    border: none;
+}
+
+#card:hover {
+    transform: scale(1.05); /* Slightly enlarge the card on hover */
+    z-index: 1; /* Bring the hovered card to the front */
+}
+
+#card-img {
+    width: 100%;
+    height: 300px;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-top-left-radius: 35px;
+    border-top-right-radius: 35px;
+}
+
+.card-gif {
+    position: absolute;
+    top: -10px;
+    left: -20px;
+    width: calc(100% + 40px);
+    height: calc(100% + 40px);
+    object-fit: cover;
+    pointer-events: none; /* Ensure the GIF doesn't interfere with user interactions */
+    opacity: 90%;
+}
+
+.card-block {
+    padding: 1rem; /* Add padding inside the card body */
+    background-color: rgba(255, 255, 255, 0); /* Set background color */
+    transition: background-color 0.3s ease; /* Smoother transition */
+    border-bottom-left-radius: 35px;
+    border-bottom-right-radius: 35px;
+    margin-bottom: 5px;
+}
+
+.card-title, .card-text {
+    margin: 0; /* Add margin for spacing */
+    font-family: 'Abril';
+}
+
+.decks-list-title {
+    font-family: 'PottaOne';
+    color: #7648A1;
+    align-self: center;
+    padding-left: 45px;
+}
+
+.cards-table-title {
+    font-family: 'PottaOne';
+    color: #7648A1;
+    align-self: center;
+    padding-left: 45px;
+}
+
+.table-container {
+    margin-bottom: 200px;
+    overflow-y: auto;
+    max-height: 75vh;
+    display: flex;
+    width: 100%;
+}
+
+#card-table {
+    --bs-table-bg: rgba(255, 255, 255, 0);
+    overflow: auto;
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    --bs-table-border-color: rgba(0, 128, 0, 0);
+
+}
+
+#card-table th, #card-table td {
+    vertical-align: top; /* Ensure content aligns at the top */
+}
+
+#card-table tr:nth-child(even) {
+    background-color: #FAE0EE; /* Lighter background color for even rows */
+}
+
+#card-table tr:nth-child(odd) {
+    background-color: #fcecf4; /* Slightly different background color for odd rows */
+}
+
+#card-table #hover-row.expanded {
+    background-color: #f9f9f9;
+}
+
+#card-table .col {
+    flex: 1 1 300px;
+    max-width: 100%;
+    margin: 25px;
+}
+
+#card-table tr {
+    display: grid;
+    grid-template-columns: 1.5fr 3fr 1fr; /* 2/6, 3/6, and 1/6 width fractions */
+    gap: 10px;
+    align-items: center;
+    position: relative;
+}
+
+.card-image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.card-image {
+    max-width: 100px;
+    height: auto;
+    margin-bottom: 3px;
+}
+
+.card-description {
+    white-space: normal;
+    overflow: auto;
+    max-width: none;
+    width: 100%; /* Ensure the text area uses full width */
+    height: auto; /* Adjust height to content */
+}
+
+.card-description.full {
+    white-space: normal;
+    max-width: none;
+    width: 100%;
+    height: auto;
+}
+
+.hover-row {
+    transition: all 0.3s ease-in-out;
+}
+
+.table-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.cards-table-title {
+    order: 1; /* Ensure the title is second */
+    margin: 0; /* Remove default margins if necessary */
+}
+
+.tooltip-container {
+    order: 2;
+}
+
+.edit-cards-table-title {
+    display: flex;
+    justify-content: flex-start;
+    margin: 0; /* Remove default margins if necessary */
+    font-family: 'PottaOne';
+    margin-left: 20px;
+    color: #7648A1;
+}
+
+.edit-icon {
+    width: 50px;
+}
+
+.edit-icon:hover {
+    transform: scale(1.25);
+}
+
+.card-input {
+    width: 100%;
+    padding: 5px;
+    margin: 2px 0;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* .save-row-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    border-radius: 5px;
+    margin-top: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.save-row-button:hover {
+    background-color: #0056b3;
+} */
+
+.hover-row {
+    transition: all 0.3s ease-in-out;
+}
+
+.top-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Align items to the top */
+    width: 100%; /* Full viewport height */
+    padding: 0;
+
+}
+
+.deck-form-container {
+    width: 30%; /* Take half the width of the container */
+    padding-left: 20px;
+    padding-bottom: 10px;
+    margin: 0;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    display: flex;
+}
+
+.save-button-container {
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    padding: 10px;
+    box-sizing: border-box;
+    justify-content: flex-end;
+    margin-top: 35px;
+}
+
+.save-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-top: 110px; /* Push the button to the bottom */
+    margin-right: 30px;
+    align-self: flex-end;
+}
+
+.save-button:hover {
+    background-color: #0056b3;
+}
+
+.add_icon {
+    width: 50px;
+}
+
+.add_icon:hover {
+    transform: scale(1.25);
+}
+
+.delete_icon {
+    width: 50px;
+    height: auto;
+    position: absolute;
+    top: -370px;
+    right: 5px;
+
+}
+
+.delete_icon:hover {
+    transform: scale(1.25);
 }

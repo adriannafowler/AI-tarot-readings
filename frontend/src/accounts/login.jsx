@@ -35,7 +35,7 @@ function LogIn() {
         localStorage.setItem('user', JSON.stringify(data.user));
         console.log("Stored token in localStorage:", localStorage.getItem('token'));
         console.log("Stored user in localStorage:", localStorage.getItem('user'));
-        navigate('/')
+        navigate('/decks/')
         } catch (error) {
             console.error('Login Error:', error);
             setError('Invalid credentials')
@@ -56,7 +56,6 @@ function LogIn() {
                     id="username"
                     value={username}
                     placeholder="username"
-                    className="text_input"
                     onChange={(e) =>
                         setUsername(e.target.value)
                     }

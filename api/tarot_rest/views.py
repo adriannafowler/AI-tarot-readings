@@ -91,7 +91,7 @@ class DeckDetailView(APIView):
 
         serializer = DeckSerializer(deck, data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(user=request.user)
             return Response({"deck": serializer.data}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -276,7 +276,7 @@ class ReadingListView(APIView):
 class ReadingDetailView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
-    
+
     @swagger_auto_schema(
         responses={
             201: openapi.Response('Reading updated successfully', ReadingSerializer),

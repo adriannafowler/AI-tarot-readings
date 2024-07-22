@@ -1,0 +1,41 @@
+@font-face {
+    font-family: 'VCR';
+    src: url('./fonts/VCR_OSD_MONO_1.001.ttf');
+}
+
+.tooltip-content {
+    background-color: #be9cde;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px 10px;
+    position: absolute;
+    z-index: 9999;
+    white-space: nowrap;
+    opacity: 0.9;
+    transition: opacity 0.3s;
+}
+
+.tooltip-content::after {
+    content: '';
+    position: absolute;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent transparent transparent;
+
+}
+
+.tooltip-left {
+    transform: translateX(-100%);  /* Move the tooltip to the left of the reference element */
+    margin-right: 1px;  /* Adjust the spacing as needed */
+    font-family: 'VCR';
+}
+
+.tooltip-left::after {
+    top: 50%;
+    left: 100%;
+    margin-left: 0;
+    margin-top: -5px;
+    margin-right: 0px;
+    border-color: transparent transparent transparent #be9cde;
+}

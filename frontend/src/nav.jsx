@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import menuIcon from "./assets/menu_icon.svg";
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import './index.css'
 
 function NavBar() {
     const [userInfo, setUserInfo] = useState(null);
@@ -13,7 +14,7 @@ function NavBar() {
     useEffect(() => {
         const fetchUserInfo = async () => {
             const token = localStorage.getItem('token');
-            console.log("Retrieved token from localStorage:", token);
+            // console.log("Retrieved token from localStorage:", token);
 
             if (!token) {
                 navigate('/');
@@ -24,7 +25,7 @@ function NavBar() {
             const user = localStorage.getItem('user');
             if (user) {
                 setUserInfo(JSON.parse(user));
-                console.log("USER INFO:", userInfo)
+                // console.log("USER INFO:", userInfo)
             }
             setLoading(false);
         };
@@ -40,8 +41,10 @@ function NavBar() {
             const response = await fetch(`${import.meta.env.VITE_APP_API_HOST}/api/logout/`, {
                 method: 'POST',
                 headers: {
-                    'Bearer': `Token ${token}`,
-                }
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
             });
 
             if (!response.ok) {
@@ -81,10 +84,10 @@ function NavBar() {
             <div className="right-nav-items">
                 <ul>
                     {userInfo && (
-                        <>
+                        <div className="logout-message">
                             <li>Hello, {userInfo.first_name}</li>
                             <li><button onClick={handleLogout}>Logout</button></li>
-                        </>
+                        </div>
                     )}
                 </ul>
             </div>

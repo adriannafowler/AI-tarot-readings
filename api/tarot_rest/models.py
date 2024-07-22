@@ -5,6 +5,7 @@ from django.contrib.postgres.fields import ArrayField
 class Deck(models.Model):
     name = models.CharField(max_length=150)
     exclude_negative = models.BooleanField(default=True)
+    img_url = models.URLField(null=True, blank=True)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="decks",

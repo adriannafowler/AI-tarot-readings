@@ -42,8 +42,13 @@ class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        logout(request)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        def post(self, request):
+            try:
+                logout(request)
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            except Exception as e:
+                logger.error(f"Logout failed: {e}")
+                return Response({"detail": "Logout failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class SignUpView(APIView):
     @swagger_auto_schema(
@@ -55,7 +60,7 @@ class SignUpView(APIView):
     )
     def post(self, request):
         serializer = UserSerializer(data=request.data)
-        logger.debug(f"Serializer data: {serializer.initial_data}")
+        print(f"Serializer data: {serializer.initial_data}")
         if serializer.is_valid():
             try:
                 user = serializer.save()
@@ -69,5 +74,5 @@ class SignUpView(APIView):
                 logger.error(f"Error saving user: {e}")
                 raise ValidationError(f"Error creating user: {e}")
         else:
-            logger.debug(f"Serializer errors: {serializer.errors}")
+            print(f"Serializer errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

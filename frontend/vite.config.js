@@ -5,13 +5,16 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: true,
-    server: {
-        watch: {
-            usePolling: true,
-        },
-        host: true,
-        strictPort: true,
-        port: 3000,
-        hmr: true,
-      }
+  build: {
+    sourcemap: true, // Enable source maps
+  },
+  server: {
+    watch: {
+      usePolling: true,
+    },
+    host: true,
+    strictPort: true,
+    port: 3000,
+    hmr: true,
+  }
 })
