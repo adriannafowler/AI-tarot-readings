@@ -9,6 +9,9 @@ import SignUp from "./accounts/signup";
 import Decks from "./decks/decks_list";
 import DeckDetail from "./decks/deck_detail"
 import DeckEdit from "./decks/deck_edit";
+import DeckCreate from "./decks/deck_create";
+import Reading from "./readings/reading";
+import ReadingHistory from "./readings/reading_hx";
 
 // const URL = import.meta.env.VITE_APP_API_HOST
 // if (!URL) {
@@ -28,7 +31,12 @@ function App() {
           <Route path="decks/">
             <Route index element={<Decks />} />
             <Route path=":id/" element={<DeckDetail />} />
+            <Route path="create/" element={<DeckCreate />} />
             <Route path=":id/edit/" element={<DeckEdit />} />
+          </Route>
+          <Route path='reading/'>
+            <Route index element={<Reading />} />
+            <Route path="history/" element={<ReadingHistory />} />
           </Route>
         </Routes>
       </BrowserRouter>

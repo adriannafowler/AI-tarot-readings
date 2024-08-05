@@ -13,7 +13,10 @@
     "@floating-ui/react": "^0.26.19",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "framer-motion": "^11.3.19",
+    "mdb-ui-kit": "^7.3.2",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.10.4",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1"
   },

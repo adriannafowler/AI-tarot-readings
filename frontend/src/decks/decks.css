@@ -8,36 +8,9 @@
     src: url('../assets/fonts/AbrilFatface-Regular.ttf');
 }
 
-.menu-icon {
-    cursor: pointer;
-    width: 75px;
-    height: auto;
-}
-
-.menu {
-    position: absolute;
-    top: 3rem;
-    left: 0;
-    background-color: #ffffff00;
-    border-radius: 8px;
-    list-style: none;
-    padding: 1rem;
-    z-index: 1000;
-}
-
-.menu li {
-    margin: 0.5rem 0;
-}
-
-.right-nav-items ul {
-    list-style: none;
-    display: flex;
-    gap: 1rem;
-    align-items: flex-end;
-}
-
-.right-nav-items li {
-    margin: 0;
+@font-face {
+    font-family: 'Inknut';
+    src: url('./assets/fonts/InknutAntiqua-Bold.ttf');
 }
 
 button {
@@ -51,6 +24,14 @@ button:hover {
     text-decoration: underline;
 }
 
+.flex-grid-container {
+    display: flex;
+    justify-content: center; /* Center the grid horizontally */
+    overflow-y: auto; /* Enable vertical scrolling */
+    max-height: calc(100vh - 210px); /* Adjust height to ensure it doesn't cover the bottom border */
+    padding-bottom: 55px;
+}
+
 .flex-grid {
     display: flex;
     flex-wrap: wrap; /* Allow items to wrap to the next line */
@@ -58,23 +39,23 @@ button:hover {
 }
 
 .flex-grid .col {
-    flex: 1 1 300px;
+    /* flex: 1 1 100px; */
     max-width: 100%;
-    margin: 25px;
+    margin: 15px;
 }
 
-.deck-img {
-    height: 300px;
-    width: 188px;
-}
+/* .deck-img {
+    height: 250px;
+    width: 138px;
+} */
 
 #card {
     position: relative; /* Ensure the pseudo-element is positioned correctly */
     background-color: rgba(255, 255, 255, 0);
     overflow: visible;
     transition: transform 0.3s ease; /* Smoother transition */
-    width: 225px;
-    height: 350px;
+    width: 188px;
+    height: 300px;
     border-radius: 35px;
     padding: 10px;
     background: linear-gradient(to top, rgba(214, 186, 235, .5), rgba(238, 220, 254, .5), rgba(214, 186, 235, .5));
@@ -116,8 +97,8 @@ button:hover {
 }
 
 .card-title, .card-text {
-    margin: 0; /* Add margin for spacing */
-    font-family: 'Abril';
+    font-family: 'Courier New';
+    font-size: 16px;
 }
 
 .decks-list-title {
@@ -136,8 +117,9 @@ button:hover {
 
 .table-container {
     margin-bottom: 200px;
-    overflow-y: auto;
+    overflow: scroll;
     max-height: 75vh;
+    height: 100%;
     display: flex;
     width: 100%;
 }
@@ -149,7 +131,14 @@ button:hover {
     table-layout: fixed;
     border-collapse: collapse;
     --bs-table-border-color: rgba(0, 128, 0, 0);
+}
 
+#card-table th {
+    border: none;
+}
+
+#card-table tr td{
+    border: none;
 }
 
 #card-table th, #card-table td {
@@ -169,7 +158,7 @@ button:hover {
 }
 
 #card-table .col {
-    flex: 1 1 300px;
+    /* flex: 1 1 300px; */
     max-width: 100%;
     margin: 25px;
 }
@@ -180,6 +169,7 @@ button:hover {
     gap: 10px;
     align-items: center;
     position: relative;
+    border: none;
 }
 
 .card-image-container {
@@ -189,9 +179,14 @@ button:hover {
 }
 
 .card-image {
-    max-width: 100px;
+    max-width: 150px;
     height: auto;
     margin-bottom: 3px;
+}
+
+#img-url-label {
+    margin-top: 10px; /* Add space between the image and the label */
+    margin-bottom: 5px; /* Add space between the label and the input */
 }
 
 .card-description {
@@ -200,6 +195,8 @@ button:hover {
     max-width: none;
     width: 100%; /* Ensure the text area uses full width */
     height: auto; /* Adjust height to content */
+    font-family: 'Courier New';
+    font-size: 14px;
 }
 
 .card-description.full {
@@ -292,32 +289,40 @@ button:hover {
     display: flex;
 }
 
+/* .delete_icon {
+    width: 50px;
+    height: auto;
+    position: absolute;
+    top: -370px;
+    right: 5px;
+    transform: translateY(-50%);
+}
+
+.delete_icon:hover {
+    transform: scale(1.25);
+} */
+
+.delete_icon {
+    width: 60px;
+    height: auto;
+    position: absolute;
+    top: 10px; /* Adjust as needed */
+    right: 10px; /* Adjust as needed */
+}
+.delete_icon:hover {
+    transform: scale(1.25);
+}
+
 .save-button-container {
     width: 50%;
     display: flex;
     flex-direction: row;
     align-items: flex-end;
-    padding: 10px;
+    margin-bottom: 0;
+    padding-bottom: 0;
     box-sizing: border-box;
     justify-content: flex-end;
     margin-top: 35px;
-}
-
-.save-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1rem;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-    margin-top: 110px; /* Push the button to the bottom */
-    margin-right: 30px;
-    align-self: flex-end;
-}
-
-.save-button:hover {
-    background-color: #0056b3;
 }
 
 .add_icon {
@@ -328,15 +333,109 @@ button:hover {
     transform: scale(1.25);
 }
 
-.delete_icon {
-    width: 50px;
+.edit_buttons {
+    display: block;
+    padding: 0;
+    background-color: #dddddd00;
+    width: 175px;
     height: auto;
-    position: absolute;
-    top: -370px;
-    right: 5px;
+    background-color: Null;
+    top: 0;
+}
+
+#save_button {
+    background-color: #dddddd00;
+    border-color: #dddddd00;
+    padding: 0;
+    margin: 0;
+    margin-top: 102px;
+    margin-right: 15px;
+    align-self: flex-end;
+}
+
+#save_button:hover {
+    transform: scale(1.1);
+}
+
+#delete_deck_button {
+    background-color: #dddddd00;
+    border-color: #dddddd00;
+    padding: 0;
+    margin: 0;
+    margin-top: 102px;
+    margin-right: 10px;
+    align-self: flex-end;
+}
+
+#delete_deck_button:hover {
+    transform: scale(1.1);
+}
+
+.create-buttons-container {
+    flex-direction: row;
+    display: flex;
+}
+
+#cancel_button {
+    background-color: #dddddd00;
+    border-color: #dddddd00;
+    padding: 0;
+    margin: 0;
+
 
 }
 
-.delete_icon:hover {
-    transform: scale(1.25);
+#cancel_button:hover {
+    transform: scale(1.1);
+}
+
+#create_save_button {
+    background-color: #dddddd00;
+    border-color: #dddddd00;
+    padding: 0;
+    margin: 0;
+
+}
+#create_save_button:hover {
+    transform: scale(1.1);
+}
+
+.save-button-container {
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    box-sizing: border-box;
+    justify-content: flex-end;
+    margin-top: 35px;
+}
+
+.create-deck-form-container {
+    width: 45%; /* Take half the width of the container */
+    padding-left: 50px;
+    padding-bottom: 10px;
+    margin: 0;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    display: flex;
+}
+
+tr th {
+    font-family: 'Inknut';
+    color: #7648A1;
+}
+
+.card-name {
+    font-family: 'Inknut';
+    font-size: 12px;
+    color: #7648A1;
+}
+
+.cancel-button {
+    font-family: 'VCR';
+}
+
+.cancel-button:hover {
+    color: navy;
 }

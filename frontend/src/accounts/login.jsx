@@ -22,19 +22,15 @@ function LogIn() {
                 body: JSON.stringify({ username, password})
             })
 
-            console.log('RESPONSE:', response);
 
         if (!response.ok) {
             const errorData = await response.json();
-            console.log('Error Data:', errorData); // Debugging
             throw new Error('Invalid credentials');
         }
-        const data = await response.json()
-        console.log("LOGIN RESPONSE DATA:", data);
+        const data = await response.json(
         localStorage.setItem('token', data.access);
+        localStorage.setItem('refresh', data.refresh);
         localStorage.setItem('user', JSON.stringify(data.user));
-        console.log("Stored token in localStorage:", localStorage.getItem('token'));
-        console.log("Stored user in localStorage:", localStorage.getItem('user'));
         navigate('/decks/')
         } catch (error) {
             console.error('Login Error:', error);

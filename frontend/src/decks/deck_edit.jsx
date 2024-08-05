@@ -1,33 +1,44 @@
 import React from "react";
 import NavBar from "../nav";
 import './decks.css';
+import save_button from '../assets/save.svg'
+import delete_deck_button from '../assets/delete_deck.svg'
 import add_icon from '../assets/add.png'
 import delete_icon from '../assets/delete.png'
-import DeleteModal from "./delete_modal.jsx";
+import DeleteModal from "./delete_card_modal.jsx";
 import Tooltip from '../assets/tooltip2.jsx'
+import CreateCard from './card_create.jsx';
 import DecksBackground from './background/decksBG.jsx';
+import DeleteDeckModal from "./delete_deck_modal.jsx";
 import { useParams, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 function DeckEdit() {
+
+
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const [userDeck, setUserDeck] = useState({});
     const [cards, setCards] = useState([]);
     const [hoveredRow, setHoveredRow] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [deckModalVisible, setDeckModalVisible] = useState(false);
+    const [cardToDelete, setCardToDelete] = useState(null);
+    const [updateCards, setUpdateCards] = useState([]);
+    const [newCards, setNewCards] = useState([]);
+    const tableRef = useRef(null);
+
+    const token = localStorage.getItem('token');
+    const param = useParams()
+    const deckID = param.id
+
     const [deckFormData, setDeckFormData] = useState({
         name: '',
         exclude_negative: true,
         img_url: '',
     })
-    const [cardFormData, setCardFormData] = useState([]);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [cardToDelete, setCardToDelete] = useState(null);
-    const token = localStorage.getItem('token');
-    const param = useParams()
-    const deckID = param.id
-
 
 
     const fetchUserDeck = async () => {
@@ -55,7 +66,6 @@ function DeckEdit() {
             }
 
             const data = await response.json();
-            console.log("!!!!!!!!!!")
             setUserDeck(data.deck);
             setDeckFormData({
                 name: data.deck.name,
@@ -104,51 +114,43 @@ function DeckEdit() {
         fetchCards();
         setLoading(false);
         fetchUserDeck();
-        console.log("***********")
     }, [navigate, token]);
-
-    useEffect(() => {
-        console.log("CARDS STATE:", cards)
-    }, [cards]);
 
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
 
-    const handleSave = (index, updatedCard) => {
-        const updatedCards = [...cards];
-        updatedCards[index] = updatedCard;
-        setCards(updatedCards);
-        setHoveredRow(null);
-    };
 
     const handleChange = (e) => {
         setDeckFormData({ ...deckFormData, [e.target.name]: e.target.value });
     }
 
     const handleCardChange = (e, cardID) => {
-        const { name, value, checked, type } = e.target;
-        const newCardData = { ...cards.find(card => card.id === cardID), [name]: type === 'checkbox' ? checked : value };
+        const { name, value, type, checked } = e.target;
 
-        setCards(cards.map(card => card.id === cardID ? newCardData : card));
+        const updateCardData = {
+            ...cards.find(card => card.id === cardID),
+            [name]: type === 'checkbox' ? checked : value,
+        };
 
-        setCardFormData(prev => {
+        setCards(cards.map(card => card.id === cardID ? updateCardData : card));
+
+        setUpdateCards(prev => {
             const cardIndex = prev.findIndex(card => card.id === cardID);
             if (cardIndex !== -1) {
                 const updatedCards = [...prev];
-                updatedCards[cardIndex] = newCardData;
+                updatedCards[cardIndex] = updateCardData;
                 return updatedCards;
             }
-            return [...prev, newCardData];
+            return [...prev, updateCardData];
         });
     };
 
-    const handleDeleteCard = (cardId) => {
-        setCards(cards.filter(card => card.id !== cardId));
-        setModalVisible(false);
+    const openDeckDeleteModal = () => {
+        setDeckModalVisible(true);
     };
 
-    const openDeleteModal = (card) => {
+    const openCardDeleteModal = (card) => {
         setCardToDelete(card);
         setModalVisible(true);
     };
@@ -156,6 +158,141 @@ function DeckEdit() {
     const closeModal = () => {
         setModalVisible(false);
     };
+
+    const closeDeckModal = () => {
+        setDeckModalVisible(false);
+    };
+
+    const handleSubmit = async () => {
+        try {
+            // Update the deck
+            if (deckFormData) {
+                try {
+                    const deckResponse = await fetch(`${import.meta.env.VITE_APP_API_HOST}/api/decks/${deckID}/`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(deckFormData),
+                        credentials: 'include'
+                    });
+
+
+                    if (!deckResponse.ok) {
+                        const errorData = await deckResponse.json();
+                        console.error('Error Data:', errorData);
+                        throw new Error('Error editing deck');
+                    }
+                } catch (err) {
+                    console.error("Error during deck PUT:", err);
+                    setError(err.message);
+                }
+            }
+
+            if (newCards.length > 0) {
+                try {
+                    const cardPostPromises = newCards.map(async (card) => {
+                        const cardResponse = await fetch(`${import.meta.env.VITE_APP_API_HOST}/api/decks/${deckID}/cards/`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(card),
+                            credentials: 'include'
+                        });
+
+
+                        if (!cardResponse.ok) {
+                            const errorData = await cardResponse.json();
+                            console.error('Error Data:', errorData);
+                            throw new Error('Error creating card');
+                        }
+
+                    });
+
+                    await Promise.all(cardPostPromises);
+                } catch (err) {
+                    console.error("Error during new card POST:", err);
+                    setError(err.message);
+                }
+            }
+
+
+            if (updateCards.length > 0) {
+                try {
+                    const cardUpdatePromises = updateCards.map(async (card) => {
+                        const cardResponse = await fetch(`${import.meta.env.VITE_APP_API_HOST}/api/decks/${deckID}/cards/${card.id}/`, {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(card),
+                            credentials: 'include'
+                        });
+
+                        if (!cardResponse.ok) {
+                            const errorData = await cardResponse.json();
+                            console.error('Error Data:', errorData);
+                            throw new Error(`Error updating ${card.name} card`);
+                        }
+
+                    });
+
+                    await Promise.all(cardUpdatePromises);
+
+                } catch (err) {
+                    console.error("Error during card PUT:", err);
+                    setError(err.message);
+                }
+            }
+
+            navigate(`/decks/${deckID}/`);
+        } catch (err) {
+            console.error("Error during submit:", err);
+            setError(err.message);
+        }
+    };
+
+
+    // const createCardForm = () => {
+    //     newCards.unshift({
+    //         deck: deckID,
+    //         description: '',
+    //         image_url: '',
+    //         is_negative: false,
+    //         name: ''
+    //     })
+    // }
+
+    const handleNewCardAdded = () => {
+        fetchCards();
+    };
+
+    const addNewCard = () => {
+        setNewCards(prev => [
+            {
+                deck: deckID,
+                description: '',
+                image_url: '',
+                is_negative: false,
+                name: '',
+                id: `new-${prev.length}` // unique temporary ID for each new card
+            },
+            ...prev
+        ]);
+        scrollToTop()
+    };
+
+    const scrollToTop = () => {
+        if (tableRef.current) {
+            tableRef.current.scrollTop = 0;
+        }
+    };
+;
+
 
 
     return (
@@ -208,13 +345,16 @@ function DeckEdit() {
                     </div>
                 </form>
                 <div className='save-button-container'>
-                        <button className='save-button'>Save</button>
+                    <button id="save_button"><img className='edit_buttons' src={save_button} onClick={handleSubmit} /></button>
+                    <button id="delete_deck_button"><img className='edit_buttons' src={delete_deck_button} onClick={openDeckDeleteModal}/></button>
+                        {/* <button onClick={handleSubmit} className='save-button'>Save</button> */}
                         <div className="tooltip-container">
                             <Tooltip content="Add a card" >
                                 <img
                                     className='add_icon'
                                     src={add_icon}
-                                    alt='add a card'/>
+                                    alt='add a card'
+                                    onClick={addNewCard}/>
                             </Tooltip>
                         </div>
                 </div>
@@ -230,21 +370,34 @@ function DeckEdit() {
                         <th scope="col">Is Negative?</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="table-body">
+                    <div ref={tableRef}>
+                    {newCards.map((card) => (
+                        <CreateCard
+                            key={card.id}
+                            deckID={deckID}
+                            token={token}
+                            onNewCardAdded={handleNewCardAdded}
+                            newCards={newCards}
+                            setNewCards={setNewCards}
+                        />
+                    ))}
+                    </div>
                     {cards.map((card, index) => (
+                        <>
                             <tr
                                 key={card.id}
                                 className={`hover-row ${hoveredRow === index ? 'expanded' : ''}`}
                                 id="hover-row"
                                 onMouseEnter={() => setHoveredRow(index)}
-                                onMouseLeave={() => setHoveredRow(null)}>
+                                onMouseLeave={() => setHoveredRow(null)}
+                                style={{ position: 'relative' }}>
                                     <td className="card-image-container">
                                         <div className="col">
-                                            <img src={card.image_url} alt={card.name} className="card-image" />
-                                            <label
-                                                className='form-label'>
-                                                Image URL:
-                                            </label>
+                                            <div>
+                                                <img src={card.image_url} alt={card.name} className="card-image" />
+                                            </div>
+                                            <label className='form-label' id='img-url-label'>Image URL:</label>
                                             <input
                                                 type="text"
                                                 name="image_url"
@@ -252,10 +405,7 @@ function DeckEdit() {
                                                 onChange={(e) => handleCardChange(e, card.id)}
                                                 className="card-input"
                                             />
-                                            <label
-                                                className='form-label'>
-                                                Card Name:
-                                            </label>
+                                            <label className='form-label'>Card Name:</label>
                                             <input
                                                 type="text"
                                                 name="name"
@@ -266,20 +416,20 @@ function DeckEdit() {
                                         </div>
                                     </td>
                                     <td className={`card-description ${hoveredRow === index ? 'full' : ''}`}>
-                                        <textarea type="text-area"
-                                            name="description"
-                                            value={card.description}
-                                            onChange={(e) => handleCardChange(e, card.id)}
-                                            className="card-description"
-                                            rows="10">
-                                        {card.description}
-                                        </textarea>
+                                            <textarea type="text-area"
+                                                name="description"
+                                                value={card.description}
+                                                onChange={(e) => handleCardChange(e, card.id)}
+                                                className="card-description"
+                                                rows="10">
+                                            {card.description}
+                                            </textarea>
                                     </td>
                                     <td>
                                         <div data-mdb-input-init className='form-check'>
                                             <input
                                                 type="checkbox"
-                                                name="exclude_negative"
+                                                name="is_negative"
                                                 defaultChecked={card.is_negative}
                                                 onChange={(e) => handleCardChange(e, card.id)}
                                                 className="form-check-input"
@@ -290,9 +440,16 @@ function DeckEdit() {
                                                 Card is negative
                                             </label>
                                         </div>
-                                        <img className='delete_icon' src={delete_icon} alt="delete a card" onClick={() => openDeleteModal(card)} />
+                                    </td>
+                                    <td>
+                                        <img className='delete_icon'
+                                        src={delete_icon} alt="delete a card"
+                                        onClick={() => openCardDeleteModal(card)}
+                                        />
                                     </td>
                             </tr>
+                        </>
+
                     ))}
                     </tbody>
                 </table>
@@ -300,9 +457,20 @@ function DeckEdit() {
             {modalVisible && (
                 < DeleteModal
                 cardTitle={cardToDelete?.name}
-                onDelete={() => handleDeleteCard(cardToDelete.id)}
+                cardID={cardToDelete?.id}
                 onCancel={closeModal}
+                deckID={deckID}
+                token={token}
                 imgURL={cardToDelete?.image_url}
+                />
+            )}
+
+            {deckModalVisible && (
+                < DeleteDeckModal
+                deckName={deckFormData.name}
+                deckID={deckID}
+                token={token}
+                onCancel={closeDeckModal}
                 />
             )}
         </>

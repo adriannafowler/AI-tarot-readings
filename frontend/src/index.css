@@ -3,6 +3,12 @@
   src: url('./assets/fonts/VCR_OSD_MONO_1.001.ttf');
 }
 
+@font-face {
+  font-family: 'Inknut';
+  src: url('./assets/fonts/InknutAntiqua-Bold.ttf');
+}
+
+
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -15,4 +21,56 @@
   padding-right: 25px;
   font-family: 'VCR';
   color: #7648A1;
+}
+
+.menu-icon {
+  cursor: pointer;
+  width: 75px;
+  height: auto;
+}
+
+.menu-icon:hover {
+  transform: scale(1.25);
+}
+
+.menu {
+  position: absolute;
+  top: 4rem;
+  left: 1rem;
+  background-color: #ffffffee;
+  border-radius: 8px;
+  list-style: none;
+  padding: 1rem;
+  z-index: 1000;
+  width: 175px;
+}
+
+.menu li {
+  margin: 0.5rem 0;
+}
+
+.menu li a {
+  font-family: 'Inknut';
+  font-size: 16px;
+  color: #7648A1;
+}
+
+.menu li a:hover {
+  transform: scale(1.1);
+  color: pink;
+}
+
+.right-nav-items ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.right-nav-items li {
+  margin: 0;
+}
+
+.menu li button {
+  font-family: 'VCR';
 }

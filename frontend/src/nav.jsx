@@ -14,10 +14,9 @@ function NavBar() {
     useEffect(() => {
         const fetchUserInfo = async () => {
             const token = localStorage.getItem('token');
-            // console.log("Retrieved token from localStorage:", token);
 
             if (!token) {
-                navigate('/');
+                navigate('login/');
                 alert('You must be logged in to access this page');
                 return;
             }
@@ -25,7 +24,6 @@ function NavBar() {
             const user = localStorage.getItem('user');
             if (user) {
                 setUserInfo(JSON.parse(user));
-                // console.log("USER INFO:", userInfo)
             }
             setLoading(false);
         };
@@ -35,7 +33,9 @@ function NavBar() {
 
     const handleLogout = async () => {
         const token = localStorage.getItem('token');
-        if (!token) return;
+        const refresh = localStorage.getItem('refresh');
+
+        if (!token || !refresh) return;
 
         try {
             const response = await fetch(`${import.meta.env.VITE_APP_API_HOST}/api/logout/`, {
@@ -44,15 +44,19 @@ function NavBar() {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
+                body: JSON.stringify({ refresh }),
                 credentials: 'include'
             });
 
+
             if (!response.ok) {
-                console.error('Logout failed');
+                const errorData = await response.json();
+                console.error('Logout failed:', errorData);
                 return;
             }
 
             localStorage.removeItem('token');
+            localStorage.removeItem('refresh');
             setUserInfo(null);
             navigate('/login');
         } catch (error) {
@@ -69,15 +73,30 @@ function NavBar() {
 
     return (
         <nav className="navbar">
-            <div className="left-nav-items">
-                <img src={menuIcon} alt="Menu" onClick={toggleMenu} className="menu-icon" />
+            <div className="dropdown">
+                <img
+                type="button"
+                id="inventoryDropdown"
+                // data-bs-toggle="dropdown"
+                aria-expanded="false"
+                src={menuIcon} alt="Menu" onClick={toggleMenu} className="menu-icon" />
                 {menuOpen && (
                     <ul className="menu">
-                        <li><NavLink to="/">Home</NavLink></li>
-                        <li>Decks</li>
-                        <li>Profile</li>
-                        <li>Readings Hx</li>
-                        <li>Get a reading</li>
+                        <li id="link1">
+                            <NavLink  className='nav-link' to="/decks/">
+                            My Decks
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink className='nav-link' to="/reading/">
+                            Get a Reading
+                            </NavLink>
+                        </li>
+                        <li>
+                            <button onClick={handleLogout}>
+                                Logout
+                            </button>
+                        </li>
                     </ul>
                 )}
             </div>
@@ -86,7 +105,7 @@ function NavBar() {
                     {userInfo && (
                         <div className="logout-message">
                             <li>Hello, {userInfo.first_name}</li>
-                            <li><button onClick={handleLogout}>Logout</button></li>
+                            <li><button id="logout-button" onClick={handleLogout}>Logout</button></li>
                         </div>
                     )}
                 </ul>

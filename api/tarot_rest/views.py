@@ -7,6 +7,7 @@ from .serializers import DeckSerializer, CardSerializer, ReadingSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from .acls import get_reading
+import json
 import random
 # from rest_framework.authtoken.models import Token
 import logging
@@ -246,6 +247,7 @@ class ReadingListView(APIView):
 
         try:
             deck = Deck.objects.get(id=deck_id, user=request.user)
+
         except Deck.DoesNotExist:
             return Response({"detail": "Deck not found."}, status=status.HTTP_404_NOT_FOUND)
 
@@ -258,14 +260,16 @@ class ReadingListView(APIView):
         for i in range(len(random_cards)):
             d[f"card{i + 1}"] = f"{random_cards[i].name} - {random_cards[i].description}"
             chosen_card_ids.append(random_cards[i].id)
+
         reading = get_reading(d)
 
+
         reading_data = {
-            "title": request.data.get("title"),
             "reading": reading,
             "cards": chosen_card_ids,
             "user": request.user.id
         }
+
 
         serializer = ReadingSerializer(data=reading_data)
         if serializer.is_valid():

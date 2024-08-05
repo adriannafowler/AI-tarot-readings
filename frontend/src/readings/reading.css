@@ -1,0 +1,162 @@
+@font-face {
+    font-family: 'PottaOne';
+    src: url('./assets/fonts/PottaOne-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Inknut';
+    src: url('./assets/fonts/InknutAntiqua-Bold.ttf');
+}
+
+.reading-container {
+    display: flex;
+    flex-direction: column; /* Keep this as column to stack the button and cards-container */
+    justify-content: center; /* Center the content horizontally */
+    align-items: center; /* Center the content vertically */
+    width: 100%;
+    height: 100vh;
+    overflow: auto;
+    margin-top: 20px;;
+    /* margin-top: 145px; */
+}
+
+.reading-container button {
+    padding: 10px 20px; /* Adds some padding to the button */
+    font-size: 50px; /* Adjusts the font size of the button */
+    margin-top: -225px;
+    font-family: 'PottaOne';
+    color: #7648A1;
+    text-decoration: none;
+    /* margin-bottom: 225px;  */
+}
+
+
+.cards-container {
+    display: flex;
+    flex-direction: row; /* Arrange cards in a row */
+    justify-content: center; /* Center the cards horizontally */
+    /* gap: 50px;  */
+    margin-top: 0; /* Adds some space above the cards */
+
+}
+
+.reading-card {
+    display: flex;
+    flex-direction: column; /* Ensures card content (image and text) is stacked vertically */
+    align-items: center; /* Center the card content horizontally */
+
+}
+
+.reading-card-image {
+    width: 175px;
+    height: 300px;
+    margin-top: -300px;
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+
+.reading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: flex-start; */
+    text-align: center; /* Center the reading content */
+    max-height: 47vh; /* Adjust height as needed */
+    overflow-y: auto;
+    width: 65%; /* Ensures it takes the full width */
+    padding: 20px; /* Center the reading content */
+    margin-left: -600px;
+    margin-top: -350px;
+    margin-right: 50px;
+    margin-bottom: 65px;
+    font-family: 'Lekton';
+
+}
+
+
+.card-thumbnails-container {
+    margin-left: 50px;
+    display: flex;
+    flex-direction: row;
+}
+
+.card-thumbnail {
+    width: 67.5px;
+    height: 90px;
+    margin-left: 50px;
+    margin-top: -70px;
+    margin-bottom: 5px;
+}
+
+.dd-and-cards-container {
+    display: flex;
+    margin-left: 20px;
+}
+
+.dd-and-cards-container button {
+    background-color: #b97cf18f;
+    border: #7648A1;
+    font-family: 'Courier New';
+}
+
+.card-thumbnails-container {
+    margin-left: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 20px; /* Adds space between thumbnails */
+}
+
+.card-img-top-display {
+    display: flex;
+    flex-direction: column;
+}
+
+figcaption {
+    text-align: center;
+    font-size: 12px; /* Adjust as needed */
+    margin-left: 40px;
+}
+
+.get-reading-button {
+    position: relative; /* Make the button a positioned element */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.get-reading-button:hover {
+    transform: scale(1.1);
+}
+
+.button-sparkles {
+    position: absolute; /* Position the GIF absolutely within the button */
+    top: -100px;
+    left: -10px;
+    width: calc(100% + 20px);
+    height: auto;
+    pointer-events: none; /* Make sure the GIF doesn't interfere with button interactions */
+    z-index: 1; /* Ensure the GIF is above the button text */
+    opacity: 0.8; /* Adjust opacity if needed */
+}
+
+.chosen-card-name {
+    font-family: 'Inknut';
+}
+
+.your-reading {
+    font-family: 'Inknut';
+}
+
+.actual-reading {
+    font-family: 'Courier New';
+}
+
+.deck-dropdown-options {
+    font-family: 'Courier New';
+}
+
+.big-chosen-card-name {
+    font-family: 'Inknut';
+}

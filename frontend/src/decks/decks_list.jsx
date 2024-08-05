@@ -7,7 +7,6 @@ import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 function Decks() {
-    const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [hoveredCard, setHoveredCard] = useState(null);
@@ -15,23 +14,7 @@ function Decks() {
     const navigate = useNavigate();
     const [userDecks, setUserDecks] = useState([]);
     const token = localStorage.getItem('token');
-    console.log("Retrieved token from localStorage:", token);
 
-    const fetchUserInfo = async () => {
-        if (!token) {
-            navigate('/');
-            alert('You must be logged in to access this page');
-            return;
-        }
-
-        const user = localStorage.getItem('user');
-        if (user) {
-            setUserInfo(JSON.parse(user));
-            console.log("USER INFO:", JSON.parse(user));
-        } else {
-            console.log("No user info found in localStorage");
-        }
-    };
 
     const fetchUserDecks = async () => {
         if (!token) {
@@ -50,7 +33,6 @@ function Decks() {
                 credentials: 'include'
             });
 
-            console.log("API Response:", response);
 
             if (!response.ok) {
                 const errorData = await response.json();
@@ -60,7 +42,6 @@ function Decks() {
 
             const data = await response.json();
             setUserDecks(data.decks);
-            console.log("DECKS DATA:", data.decks);
         } catch (err) {
             console.error("Error during fetch:", err);
             setError(err.message);
@@ -93,6 +74,7 @@ function Decks() {
             <DecksBackground />
             <NavBar />
             <h1 className="decks-list-title">Decks</h1>
+            <div className="flex-grid-container">
             <div className="flex-grid">
                 {userDecks.map((deck, index) => (
                     <div
@@ -114,6 +96,7 @@ function Decks() {
                         </div>
                     </div>
                 ))}
+            </div>
             </div>
         </>
     );
