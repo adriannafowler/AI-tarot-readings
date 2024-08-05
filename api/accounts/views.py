@@ -14,28 +14,32 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 logger = logging.getLogger(__name__)
 
+
 class LoginView(APIView):
     @swagger_auto_schema(
         request_body=LoginSerializer,
         responses={
-            200: openapi.Response('Login successful', UserSerializer),
-            400: 'Invalid credentials'
-        }
+            200: openapi.Response("Login successful", UserSerializer),
+            400: "Invalid credentials",
+        },
     )
     def post(self, request):
         logger.debug(f"Login attempt with data: {request.data}")
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.validated_data['user']
+            user = serializer.validated_data["user"]
             refresh = RefreshToken.for_user(user)
             login(request, user)
-            return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-                'user': UserSerializer(user).data
-            })
+            return Response(
+                {
+                    "refresh": str(refresh),
+                    "access": str(refresh.access_token),
+                    "user": UserSerializer(user).data,
+                }
+            )
         logger.debug(f"Login failed with errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class LogoutView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -43,16 +47,15 @@ class LogoutView(APIView):
 
     @swagger_auto_schema(
         responses={
-            204: 'Logout successful',
-            400: 'Invalid refresh token',
-            500: 'Internal server error'
+            204: "Logout successful",
+            400: "Invalid refresh token",
+            500: "Internal server error",
         },
-        security=[{'Bearer': []}]
+        security=[{"Bearer": []}],
     )
-
     def post(self, request):
         try:
-            refresh_token = request.data.get('refresh')
+            refresh_token = request.data.get("refresh")
             token = RefreshToken(refresh_token)
             token.blacklist()
 
@@ -60,15 +63,19 @@ class LogoutView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             logger.error(f"Logout failed: {e}")
-            return Response({"detail": "Logout failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                {"detail": "Logout failed"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
 
 class SignUpView(APIView):
     @swagger_auto_schema(
         request_body=UserSerializer,
         responses={
-            201: openapi.Response('User created successfully', UserSerializer),
-            400: 'Invalid data'
-        }
+            201: openapi.Response("User created successfully", UserSerializer),
+            400: "Invalid data",
+        },
     )
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -76,11 +83,14 @@ class SignUpView(APIView):
             try:
                 user = serializer.save()
                 refresh = RefreshToken.for_user(user)
-                return Response({
-                    'refresh': str(refresh),
-                    'access': str(refresh.access_token),
-                    'user': UserSerializer(user).data
-                }, status=status.HTTP_201_CREATED)
+                return Response(
+                    {
+                        "refresh": str(refresh),
+                        "access": str(refresh.access_token),
+                        "user": UserSerializer(user).data,
+                    },
+                    status=status.HTTP_201_CREATED,
+                )
             except Exception as e:
                 logger.error(f"Error saving user: {e}")
                 raise ValidationError(f"Error creating user: {e}")

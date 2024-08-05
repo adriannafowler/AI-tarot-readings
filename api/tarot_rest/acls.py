@@ -7,9 +7,9 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
-model = genai.GenerativeModel('gemini-1.5-pro')
+model = genai.GenerativeModel("gemini-1.5-pro")
 
 
 def get_reading(cards):
@@ -20,4 +20,3 @@ def get_reading(cards):
     prompt = f"Given 3 tarot cards and their descriptions: 1){card1}, 2){card2}, 3){card3} Please give me a tarot reading."
     response = model.generate_content(prompt)
     return response.text
-

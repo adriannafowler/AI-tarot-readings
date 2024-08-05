@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
 
+
 class Deck(models.Model):
     name = models.CharField(max_length=150)
     exclude_negative = models.BooleanField(default=True)
@@ -30,6 +31,7 @@ class Card(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Reading(models.Model):
     time_stamp = models.DateTimeField(auto_now_add=True)

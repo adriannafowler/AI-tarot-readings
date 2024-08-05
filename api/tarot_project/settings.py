@@ -30,27 +30,27 @@ SECRET_KEY = "django-insecure-pjicegv)-(kiv@!91g2qk#l7pu9cl83j85m@xs4^o*g@_ajp_)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'corsheaders',
+    "corsheaders",
     # 'rest_framework',
     # 'rest_framework.authtoken',
-    'rest_framework',
-    'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "rest_framework",
+    "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
     "tarot_rest.apps.TarotRestConfig",
-    'accounts.apps.AccountsConfig',
-    'drf_yasg',
+    "accounts.apps.AccountsConfig",
+    "drf_yasg",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -58,12 +58,12 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:3100",
-    "http://localhost"
+    "http://localhost",
 ]
 
 CORS_ALLOW_HEADERS = [
-    'Authorization',
-    'Content-Type',
+    "Authorization",
+    "Content-Type",
 ]
 
 # CORS_ORIGIN_WHITELIST = [
@@ -78,23 +78,21 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 SWAGGER_SETTINGS = {
-    'SECURITY_DEFINITIONS': {
-        'Bearer': {
-            'type': 'apiKey',
-            'in': 'header',
-            'name': 'Authorization',
-            'description': "JWT Authorization header using the Bearer scheme. Example: 'Bearer {token}'"
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "Authorization",
+            "description": "JWT Authorization header using the Bearer scheme. Example: 'Bearer {token}'",
         }
     }
 }
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
 }
 # REST_FRAMEWORK = {
@@ -109,18 +107,17 @@ REST_FRAMEWORK = {
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
-    'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
+    "SLIDING_TOKEN_LIFETIME": timedelta(days=30),
 }
 
 
-
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -163,13 +160,15 @@ WSGI_APPLICATION = "tarot_project.wsgi.application"
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("POSTGRES_DB", "tarot_db"),
-        'USER': os.getenv("POSTGRES_USER", "tarot_user"),
-        'PASSWORD': os.getenv("POSTGRES_PASSWORD", "password"),
-        'HOST': os.getenv("POSTGRES_HOST", "localhost"),  # Use 'localhost' or the service name in docker-compose.yml
-        'PORT': os.getenv("POSTGRES_PORT", '5432'),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB", "tarot_db"),
+        "USER": os.getenv("POSTGRES_USER", "tarot_user"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "password"),
+        "HOST": os.getenv(
+            "POSTGRES_HOST", "localhost"
+        ),  # Use 'localhost' or the service name in docker-compose.yml
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
     }
 }
 
@@ -232,23 +231,23 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # }
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
         },
     },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'INFO',
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO",
         },
-        'django.utils.autoreload': {
-            'handlers': ['console'],
-            'level': 'ERROR',  # Change this to 'ERROR' or 'WARNING'
-            'propagate': False,
+        "django.utils.autoreload": {
+            "handlers": ["console"],
+            "level": "ERROR",  # Change this to 'ERROR' or 'WARNING'
+            "propagate": False,
         },
     },
 }

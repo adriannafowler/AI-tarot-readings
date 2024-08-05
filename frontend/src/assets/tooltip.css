@@ -26,8 +26,7 @@
 }
 
 .tooltip-left {
-    transform: translateX(-100%);  /* Move the tooltip to the left of the reference element */
-    margin-right: 1px;  /* Adjust the spacing as needed */
+    transform: translateX(-100%);  
     font-family: 'VCR';
 }
 

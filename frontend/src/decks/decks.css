@@ -26,34 +26,28 @@ button:hover {
 
 .flex-grid-container {
     display: flex;
-    justify-content: center; /* Center the grid horizontally */
-    overflow-y: auto; /* Enable vertical scrolling */
-    max-height: calc(100vh - 210px); /* Adjust height to ensure it doesn't cover the bottom border */
+    justify-content: center;
+    overflow-y: auto;
+    max-height: calc(100vh - 210px);
     padding-bottom: 55px;
 }
 
 .flex-grid {
     display: flex;
-    flex-wrap: wrap; /* Allow items to wrap to the next line */
-    justify-content: flex-start; /* Center the items horizontally */
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
 .flex-grid .col {
-    /* flex: 1 1 100px; */
     max-width: 100%;
     margin: 15px;
 }
 
-/* .deck-img {
-    height: 250px;
-    width: 138px;
-} */
-
 #card {
-    position: relative; /* Ensure the pseudo-element is positioned correctly */
+    position: relative;
     background-color: rgba(255, 255, 255, 0);
     overflow: visible;
-    transition: transform 0.3s ease; /* Smoother transition */
+    transition: transform 0.3s ease;
     width: 188px;
     height: 300px;
     border-radius: 35px;
@@ -63,8 +57,8 @@ button:hover {
 }
 
 #card:hover {
-    transform: scale(1.05); /* Slightly enlarge the card on hover */
-    z-index: 1; /* Bring the hovered card to the front */
+    transform: scale(1.05);
+    z-index: 1;
 }
 
 #card-img {
@@ -83,14 +77,14 @@ button:hover {
     width: calc(100% + 40px);
     height: calc(100% + 40px);
     object-fit: cover;
-    pointer-events: none; /* Ensure the GIF doesn't interfere with user interactions */
+    pointer-events: none;
     opacity: 90%;
 }
 
 .card-block {
-    padding: 1rem; /* Add padding inside the card body */
-    background-color: rgba(255, 255, 255, 0); /* Set background color */
-    transition: background-color 0.3s ease; /* Smoother transition */
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0);
+    transition: background-color 0.3s ease;
     border-bottom-left-radius: 35px;
     border-bottom-right-radius: 35px;
     margin-bottom: 5px;
@@ -142,15 +136,15 @@ button:hover {
 }
 
 #card-table th, #card-table td {
-    vertical-align: top; /* Ensure content aligns at the top */
+    vertical-align: top;
 }
 
 #card-table tr:nth-child(even) {
-    background-color: #FAE0EE; /* Lighter background color for even rows */
+    background-color: #FAE0EE;
 }
 
 #card-table tr:nth-child(odd) {
-    background-color: #fcecf4; /* Slightly different background color for odd rows */
+    background-color: #fcecf4;
 }
 
 #card-table #hover-row.expanded {
@@ -158,14 +152,13 @@ button:hover {
 }
 
 #card-table .col {
-    /* flex: 1 1 300px; */
     max-width: 100%;
     margin: 25px;
 }
 
 #card-table tr {
     display: grid;
-    grid-template-columns: 1.5fr 3fr 1fr; /* 2/6, 3/6, and 1/6 width fractions */
+    grid-template-columns: 1.5fr 3fr 1fr;
     gap: 10px;
     align-items: center;
     position: relative;
@@ -185,16 +178,16 @@ button:hover {
 }
 
 #img-url-label {
-    margin-top: 10px; /* Add space between the image and the label */
-    margin-bottom: 5px; /* Add space between the label and the input */
+    margin-top: 10px;
+    margin-bottom: 5px;
 }
 
 .card-description {
     white-space: normal;
     overflow: auto;
     max-width: none;
-    width: 100%; /* Ensure the text area uses full width */
-    height: auto; /* Adjust height to content */
+    width: 100%;
+    height: auto;
     font-family: 'Courier New';
     font-size: 14px;
 }
@@ -218,8 +211,8 @@ button:hover {
 }
 
 .cards-table-title {
-    order: 1; /* Ensure the title is second */
-    margin: 0; /* Remove default margins if necessary */
+    order: 1;
+    margin: 0;
 }
 
 .tooltip-container {
@@ -229,7 +222,7 @@ button:hover {
 .edit-cards-table-title {
     display: flex;
     justify-content: flex-start;
-    margin: 0; /* Remove default margins if necessary */
+    margin: 0;
     font-family: 'PottaOne';
     margin-left: 20px;
     color: #7648A1;
@@ -251,22 +244,6 @@ button:hover {
     box-sizing: border-box;
 }
 
-/* .save-row-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    border-radius: 5px;
-    margin-top: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.save-row-button:hover {
-    background-color: #0056b3;
-} */
-
 .hover-row {
     transition: all 0.3s ease-in-out;
 }
@@ -274,41 +251,29 @@ button:hover {
 .top-container {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start; /* Align items to the top */
-    width: 100%; /* Full viewport height */
+    align-items: flex-start;
+    width: 100%;
     padding: 0;
 
 }
 
 .deck-form-container {
-    width: 30%; /* Take half the width of the container */
+    width: 30%;
     padding-left: 20px;
     padding-bottom: 10px;
     margin: 0;
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    box-sizing: border-box;
     display: flex;
 }
-
-/* .delete_icon {
-    width: 50px;
-    height: auto;
-    position: absolute;
-    top: -370px;
-    right: 5px;
-    transform: translateY(-50%);
-}
-
-.delete_icon:hover {
-    transform: scale(1.25);
-} */
 
 .delete_icon {
     width: 60px;
     height: auto;
     position: absolute;
-    top: 10px; /* Adjust as needed */
-    right: 10px; /* Adjust as needed */
+    top: 10px;
+    right: 10px;
 }
+
 .delete_icon:hover {
     transform: scale(1.25);
 }
@@ -381,8 +346,6 @@ button:hover {
     border-color: #dddddd00;
     padding: 0;
     margin: 0;
-
-
 }
 
 #cancel_button:hover {
@@ -413,11 +376,11 @@ button:hover {
 }
 
 .create-deck-form-container {
-    width: 45%; /* Take half the width of the container */
+    width: 45%; 
     padding-left: 50px;
     padding-bottom: 10px;
     margin: 0;
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    box-sizing: border-box;
     display: flex;
 }
 

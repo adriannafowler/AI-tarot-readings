@@ -70,21 +70,11 @@ form{
     color: #fae0ee;
 }
 
-/* input {
-    color: #fae0ee;
-} */
-
 .accounts-button {
     width: 125px;
     height: 30px;
-    /* border-radius: 30px; */
     background: #6F87F1;
     margin-top: 1.2rem;
-    /* border: none;
-    font-family: 'Montserrat';
-    font-size: 20px;
-    color: #FFFFFF;
-    box-shadow: 0 4px 8px 0 rgba(181, 141, 237, 0.7), 0 6px 20px 0 rgba(181, 141, 237, 0.9); */
     cursor: pointer;
     align-self: flex-start;
     color: #FCC3E5;

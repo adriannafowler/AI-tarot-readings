@@ -1,13 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./home/home-page";
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import LogIn from "./accounts/login";
 import SignUp from "./accounts/signup";
 import Decks from "./decks/decks_list";
-import DeckDetail from "./decks/deck_detail"
+import DeckDetail from "./decks/deck_detail";
 import DeckEdit from "./decks/deck_edit";
 import DeckCreate from "./decks/deck_create";
 import Reading from "./readings/reading";
@@ -19,8 +16,6 @@ import ReadingHistory from "./readings/reading_hx";
 // }
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
       <BrowserRouter>
@@ -34,7 +29,7 @@ function App() {
             <Route path="create/" element={<DeckCreate />} />
             <Route path=":id/edit/" element={<DeckEdit />} />
           </Route>
-          <Route path='reading/'>
+          <Route path="reading/">
             <Route index element={<Reading />} />
             <Route path="history/" element={<ReadingHistory />} />
           </Route>

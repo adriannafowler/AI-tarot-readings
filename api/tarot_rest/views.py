@@ -9,11 +9,13 @@ from drf_yasg import openapi
 from .acls import get_reading
 import json
 import random
+
 # from rest_framework.authtoken.models import Token
 import logging
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 logger = logging.getLogger(__name__)
+
 
 class DeckListView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -21,10 +23,10 @@ class DeckListView(APIView):
 
     @swagger_auto_schema(
         responses={
-            200: openapi.Response('List of user decks', DeckSerializer(many=True)),
-            401: 'Unauthorized'
+            200: openapi.Response("List of user decks", DeckSerializer(many=True)),
+            401: "Unauthorized",
         },
-        security=[{'Bearer': []}]
+        security=[{"Bearer": []}],
     )
     def get(self, request):
         logger.debug(f"USER: {request.user}")
@@ -35,16 +37,18 @@ class DeckListView(APIView):
             serializer = DeckSerializer(decks, many=True)
             return Response({"decks": serializer.data}, status=status.HTTP_200_OK)
         logger.debug("User not authenticated")
-        return Response({"detail": "Not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(
+            {"detail": "Not authenticated"}, status=status.HTTP_401_UNAUTHORIZED
+        )
 
     @swagger_auto_schema(
         request_body=DeckSerializer,
         responses={
-            201: openapi.Response('Deck created successfully', DeckSerializer),
-            400: 'Invalid data',
-            401: 'Unauthorized'
+            201: openapi.Response("Deck created successfully", DeckSerializer),
+            400: "Invalid data",
+            401: "Unauthorized",
         },
-        security=[{'Bearer': []}]
+        security=[{"Bearer": []}],
     )
     def post(self, request):
         serializer = DeckSerializer(data=request.data)
@@ -53,19 +57,19 @@ class DeckListView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class DeckDetailView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
         responses={
-            201: openapi.Response('Deck updated successfully', DeckSerializer),
-            401: 'Unauthorized',
-            404: 'Not Found'
+            201: openapi.Response("Deck updated successfully", DeckSerializer),
+            401: "Unauthorized",
+            404: "Not Found",
         },
-        security=[{'Bearer': []}]
+        security=[{"Bearer": []}],
     )
-
     def get(self, request, id):
         try:
             deck = Deck.objects.get(id=id, user=request.user)
@@ -77,13 +81,12 @@ class DeckDetailView(APIView):
     @swagger_auto_schema(
         request_body=DeckSerializer,
         responses={
-            201: openapi.Response('Deck updated successfully', DeckSerializer),
-            400: 'Invalid data',
-            401: 'Unauthorized'
+            201: openapi.Response("Deck updated successfully", DeckSerializer),
+            400: "Invalid data",
+            401: "Unauthorized",
         },
-        security=[{'Bearer': []}]
+        security=[{"Bearer": []}],
     )
-
     def put(self, request, id):
         try:
             deck = Deck.objects.get(id=id, user=request.user)
@@ -97,13 +100,12 @@ class DeckDetailView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(
-    responses={
-        200: openapi.Response('Deck deleted', DeckSerializer),
-        401: 'Unauthorized'
-    },
-    security=[{'Bearer': []}]
+        responses={
+            200: openapi.Response("Deck deleted", DeckSerializer),
+            401: "Unauthorized",
+        },
+        security=[{"Bearer": []}],
     )
-
     def delete(self, request, id):
         try:
             deck = Deck.objects.get(id=id, user=request.user)
@@ -112,19 +114,19 @@ class DeckDetailView(APIView):
         except Deck.DoesNotExist:
             return Response({"detail": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
 
+
 class CardListView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
         responses={
-            200: openapi.Response('List of deck cards', CardSerializer(many=True)),
-            401: 'Unauthorized'
+            200: openapi.Response("List of deck cards", CardSerializer(many=True)),
+            401: "Unauthorized",
         },
-        security=[{'Bearer': []}]
+        security=[{"Bearer": []}],
     )
-
-    def get(self,request, id):
+    def get(self, request, id):
         cards = Card.objects.filter(deck=id, deck__user=request.user)
         serializer = CardSerializer(cards, many=True)
         return Response({"cards": serializer.data}, status=status.HTTP_200_OK)
@@ -132,13 +134,12 @@ class CardListView(APIView):
     @swagger_auto_schema(
         request_body=CardSerializer,
         responses={
-            201: openapi.Response('Card created successfully', CardSerializer),
-            400: 'Invalid data',
-            401: 'Unauthorized'
+            201: openapi.Response("Card created successfully", CardSerializer),
+            400: "Invalid data",
+            401: "Unauthorized",
         },
-        security=[{'Bearer': []}]
+        security=[{"Bearer": []}],
     )
-
     def post(self, request, id):
         try:
             deck = Deck.objects.get(id=id, user=request.user)
@@ -151,39 +152,45 @@ class CardListView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class CardDetailView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
         responses={
-            201: openapi.Response('Deck updated successfully', DeckSerializer),
-            401: 'Unauthorized',
-            404: 'Not Found'
+            201: openapi.Response("Deck updated successfully", DeckSerializer),
+            401: "Unauthorized",
+            404: "Not Found",
         },
-        security=[{'Bearer': []}]
+        security=[{"Bearer": []}],
     )
-
     def get(self, request, card_id, deck_id):
         try:
-            card = Card.objects.get(id=card_id, deck__id=deck_id, deck__user=request.user)
+            card = Card.objects.get(
+                id=card_id, deck__id=deck_id, deck__user=request.user
+            )
             serializer = CardSerializer(card)
             return Response({"card": serializer.data}, status=status.HTTP_200_OK)
         except Card.DoesNotExist:
-            return Response({"card detail": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"card detail": "Not Found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
     @swagger_auto_schema(
         request_body=CardSerializer,
         responses={
-            201: openapi.Response('Card updated successfully', CardSerializer),
-            400: 'Invalid data',
-            401: 'Unauthorized'
+            201: openapi.Response("Card updated successfully", CardSerializer),
+            400: "Invalid data",
+            401: "Unauthorized",
         },
-        security=[{'Bearer': []}]
+        security=[{"Bearer": []}],
     )
-
     def put(self, request, card_id, deck_id):
         try:
-            card = Card.objects.get(id=card_id, deck__id=deck_id, deck__user=request.user)
+            card = Card.objects.get(
+                id=card_id, deck__id=deck_id, deck__user=request.user
+            )
         except Card.DoesNotExist:
             return Response({"card": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -195,19 +202,21 @@ class CardDetailView(APIView):
 
     @swagger_auto_schema(
         responses={
-            200: openapi.Response('Card deleted', CardSerializer),
-            401: 'Unauthorized'
+            200: openapi.Response("Card deleted", CardSerializer),
+            401: "Unauthorized",
         },
-        security=[{'Bearer': []}]
+        security=[{"Bearer": []}],
     )
-
     def delete(self, request, card_id, deck_id):
         try:
-            card = Card.objects.get(id=card_id, deck__id=deck_id, deck__user=request.user)
+            card = Card.objects.get(
+                id=card_id, deck__id=deck_id, deck__user=request.user
+            )
             count, _ = card.delete()
             return Response({"deleted": count > 0})
         except Card.DoesNotExist:
             return Response({"card": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
+
 
 class ReadingListView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -215,10 +224,12 @@ class ReadingListView(APIView):
 
     @swagger_auto_schema(
         responses={
-            200: openapi.Response('List of user readings', ReadingSerializer(many=True)),
-            401: 'Unauthorized'
+            200: openapi.Response(
+                "List of user readings", ReadingSerializer(many=True)
+            ),
+            401: "Unauthorized",
         },
-        security=[{'Bearer': []}]
+        security=[{"Bearer": []}],
     )
     def get(self, request):
         readings = Reading.objects.filter(user=request.user)
@@ -229,47 +240,57 @@ class ReadingListView(APIView):
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                'deck_id': openapi.Schema(type=openapi.TYPE_INTEGER, description='ID of the deck'),
+                "deck_id": openapi.Schema(
+                    type=openapi.TYPE_INTEGER, description="ID of the deck"
+                ),
             },
-            required=['deck_id']
+            required=["deck_id"],
         ),
         responses={
-            201: openapi.Response('Reading created successfully', ReadingSerializer),
-            400: 'Invalid data',
-            401: 'Unauthorized'
+            201: openapi.Response("Reading created successfully", ReadingSerializer),
+            400: "Invalid data",
+            401: "Unauthorized",
         },
-        security=[{'Bearer': []}]
+        security=[{"Bearer": []}],
     )
     def post(self, request):
-        deck_id = request.data.get('deck_id')
+        deck_id = request.data.get("deck_id")
         if not deck_id:
-            return Response({"deck_id": "This field is required."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"deck_id": "This field is required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         try:
             deck = Deck.objects.get(id=deck_id, user=request.user)
 
         except Deck.DoesNotExist:
-            return Response({"detail": "Deck not found."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"detail": "Deck not found."}, status=status.HTTP_404_NOT_FOUND
+            )
 
         cards = Card.objects.filter(deck=deck)
         if cards.count() < 3:
-            return Response({"detail": "Not enough cards in the deck."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"detail": "Not enough cards in the deck."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         random_cards = random.sample(list(cards), 3)
         d = {}
         chosen_card_ids = []
         for i in range(len(random_cards)):
-            d[f"card{i + 1}"] = f"{random_cards[i].name} - {random_cards[i].description}"
+            d[
+                f"card{i + 1}"
+            ] = f"{random_cards[i].name} - {random_cards[i].description}"
             chosen_card_ids.append(random_cards[i].id)
 
         reading = get_reading(d)
 
-
         reading_data = {
             "reading": reading,
             "cards": chosen_card_ids,
-            "user": request.user.id
+            "user": request.user.id,
         }
-
 
         serializer = ReadingSerializer(data=reading_data)
         if serializer.is_valid():
@@ -277,53 +298,58 @@ class ReadingListView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ReadingDetailView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
         responses={
-            201: openapi.Response('Reading updated successfully', ReadingSerializer),
-            401: 'Unauthorized',
-            404: 'Not Found'
+            201: openapi.Response("Reading updated successfully", ReadingSerializer),
+            401: "Unauthorized",
+            404: "Not Found",
         },
-        security=[{'Bearer': []}]
+        security=[{"Bearer": []}],
     )
-
     def get(self, request, id):
         try:
             reading = Reading.objects.get(id=id, user=request.user)
             serializer = ReadingSerializer(reading)
             return Response({"reading": serializer.data}, status=status.HTTP_200_OK)
         except Deck.DoesNotExist:
-            return Response({"reading detail": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"reading detail": "Not Found"}, status=status.HTTP_404_NOT_FOUND
+            )
 
     @swagger_auto_schema(
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                'title': openapi.Schema(type=openapi.TYPE_STRING, description='Title of the reading'),
+                "title": openapi.Schema(
+                    type=openapi.TYPE_STRING, description="Title of the reading"
+                ),
             },
-            required=['title']
+            required=["title"],
         ),
         responses={
-            200: openapi.Response('Reading updated successfully', ReadingSerializer),
-            400: 'Invalid data',
-            401: 'Unauthorized',
-            404: 'Not Found'
+            200: openapi.Response("Reading updated successfully", ReadingSerializer),
+            400: "Invalid data",
+            401: "Unauthorized",
+            404: "Not Found",
         },
-        security=[{'Bearer': []}]
+        security=[{"Bearer": []}],
     )
-
     def patch(self, request, id):
         try:
             reading = Reading.objects.get(id=id, user=request.user)
         except Reading.DoesNotExist:
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        title = request.data.get('title')
+        title = request.data.get("title")
         if not title:
-            return Response({"title": "This field is required."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"title": "This field is required."}, status=status.HTTP_400_BAD_REQUEST
+            )
 
         reading.title = title
         reading.save()
@@ -337,4 +363,6 @@ class ReadingDetailView(APIView):
             count, _ = reading.delete()
             return Response({"deleted": count > 0})
         except Reading.DoesNotExist:
-            return Response({"reading detail": "Not Found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"reading detail": "Not Found"}, status=status.HTTP_404_NOT_FOUND
+            )

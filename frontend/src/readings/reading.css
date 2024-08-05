@@ -10,41 +10,37 @@
 
 .reading-container {
     display: flex;
-    flex-direction: column; /* Keep this as column to stack the button and cards-container */
-    justify-content: center; /* Center the content horizontally */
-    align-items: center; /* Center the content vertically */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: 100vh;
     overflow: auto;
     margin-top: 20px;;
-    /* margin-top: 145px; */
 }
 
 .reading-container button {
-    padding: 10px 20px; /* Adds some padding to the button */
-    font-size: 50px; /* Adjusts the font size of the button */
+    padding: 10px 20px;
+    font-size: 50px;
     margin-top: -225px;
     font-family: 'PottaOne';
     color: #7648A1;
     text-decoration: none;
-    /* margin-bottom: 225px;  */
 }
 
 
 .cards-container {
     display: flex;
-    flex-direction: row; /* Arrange cards in a row */
-    justify-content: center; /* Center the cards horizontally */
-    /* gap: 50px;  */
-    margin-top: 0; /* Adds some space above the cards */
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 0;
 
 }
 
 .reading-card {
     display: flex;
-    flex-direction: column; /* Ensures card content (image and text) is stacked vertically */
-    align-items: center; /* Center the card content horizontally */
-
+    flex-direction: column;
+    align-items: center;
 }
 
 .reading-card-image {
@@ -60,12 +56,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* justify-content: flex-start; */
-    text-align: center; /* Center the reading content */
-    max-height: 47vh; /* Adjust height as needed */
+    text-align: center;
+    max-height: 47vh;
     overflow-y: auto;
-    width: 65%; /* Ensures it takes the full width */
-    padding: 20px; /* Center the reading content */
+    width: 65%;
+    padding: 20px;
     margin-left: -600px;
     margin-top: -350px;
     margin-right: 50px;
@@ -105,7 +100,7 @@
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    gap: 20px; /* Adds space between thumbnails */
+    gap: 20px;
 }
 
 .card-img-top-display {
@@ -115,12 +110,12 @@
 
 figcaption {
     text-align: center;
-    font-size: 12px; /* Adjust as needed */
+    font-size: 12px;
     margin-left: 40px;
 }
 
 .get-reading-button {
-    position: relative; /* Make the button a positioned element */
+    position: relative;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
@@ -131,14 +126,14 @@ figcaption {
 }
 
 .button-sparkles {
-    position: absolute; /* Position the GIF absolutely within the button */
+    position: absolute;
     top: -100px;
     left: -10px;
     width: calc(100% + 20px);
     height: auto;
-    pointer-events: none; /* Make sure the GIF doesn't interfere with button interactions */
-    z-index: 1; /* Ensure the GIF is above the button text */
-    opacity: 0.8; /* Adjust opacity if needed */
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.8;
 }
 
 .chosen-card-name {
