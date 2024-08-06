@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -11,6 +10,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 import logging
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from tarot_rest.models import Deck, Card
+from django.contrib.auth import get_user_model
 
 logger = logging.getLogger(__name__)
 
@@ -80,9 +81,32 @@ class SignUpView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            try:
-                user = serializer.save()
-                refresh = RefreshToken.for_user(user)
+            user = serializer.save()
+            refresh = RefreshToken.for_user(user)
+
+            admin_user = get_user_model().objects.get(username='admin')  # Ensure this username is correct
+            default_deck = Deck.objects.filter(name='Default Deck', user=admin_user).first()
+            print("DEFAULT DECK:", default_deck)
+            print("DEFAULT CARDS:", Card.objects.filter(deck=default_deck))
+            if default_deck:
+                # Create a copy of the default deck for the new user
+                new_deck = Deck.objects.create(
+                    name=default_deck.name,
+                    exclude_negative=default_deck.exclude_negative,
+                    img_url=default_deck.img_url,
+                    user=user
+                )
+
+                # Copy cards from the default deck to the new deck
+                for card in Card.objects.filter(deck=default_deck):
+                    Card.objects.create(
+                        name=card.name,
+                        image_url=card.image_url,
+                        description=card.description,
+                        is_negative=card.is_negative,
+                        deck=new_deck
+                    )
+
                 return Response(
                     {
                         "refresh": str(refresh),
@@ -91,7 +115,4 @@ class SignUpView(APIView):
                     },
                     status=status.HTTP_201_CREATED,
                 )
-            except Exception as e:
-                logger.error(f"Error saving user: {e}")
-                raise ValidationError(f"Error creating user: {e}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
