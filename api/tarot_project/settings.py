@@ -66,11 +66,6 @@ CORS_ALLOW_HEADERS = [
     "Content-Type",
 ]
 
-# CORS_ORIGIN_WHITELIST = [
-#     'http://localhost:3100',
-#     "http://localhost:3100",
-#     "http://localhost"
-# ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
@@ -146,17 +141,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "tarot_project.wsgi.application"
-
-
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
 
 
 DATABASES = {
