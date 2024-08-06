@@ -1,5 +1,10 @@
 FROM python:3.10-bullseye
 RUN python -m pip install --upgrade pip
+
+# Add wait-for-it script
+ADD https://github.com/vishnubob/wait-for-it/raw/master/wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
+
 WORKDIR /app
 
 COPY requirements.txt requirements.txt

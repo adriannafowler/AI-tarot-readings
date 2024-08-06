@@ -7,6 +7,7 @@ import NavBar from "../nav";
 import "./reading.css";
 import sparkles from "./background/sparkles2.gif";
 import DeckDropdown from "./dropdown.jsx";
+import gemnini_logo from '../assets/gemini.svg'
 
 function Reading() {
     const [userDecks, setUserDecks] = useState([]);
@@ -279,6 +280,7 @@ function Reading() {
                 </motion.div>
             )}
             </div>
+            <img className="gemini-logo" src={gemnini_logo} alt="powered by google gemini" />
         </div>
         </>
     );

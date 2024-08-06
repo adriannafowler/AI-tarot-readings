@@ -27,7 +27,7 @@ function LogIn() {
             const errorData = await response.json();
             throw new Error('Invalid credentials');
         }
-        const data = await response.json(
+        const data = await response.json()
         localStorage.setItem('token', data.access);
         localStorage.setItem('refresh', data.refresh);
         localStorage.setItem('user', JSON.stringify(data.user));

@@ -50,7 +50,6 @@ function Decks() {
     };
 
     useEffect(() => {
-        fetchUserInfo();
         fetchUserDecks();
         setLoading(false);
     }, [navigate, token]);
