@@ -19,6 +19,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project files
 COPY . /app/
 
+# Copy the database dump file
+COPY /db_dump.sql /app/db_dump.sql
+
 # Collect static files (if you have any)
 # RUN python /app/manage.py collectstatic --noinput
 

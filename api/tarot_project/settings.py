@@ -31,7 +31,11 @@ SECRET_KEY = "django-insecure-pjicegv)-(kiv@!91g2qk#l7pu9cl83j85m@xs4^o*g@_ajp_)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    "tarot-ai-readings-backend.fly.dev",
+    "localhost",
+    "127.0.0.1"
+]
 
 
 # Application definition
@@ -58,8 +62,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:3100",
     "http://localhost",
-    "https://tarot-ai-readings.fly.dev",
-    "http://tarot-ai-readings.fly.dev",
+    "http://127.0.0.1",
+    "https://tarot-ai-readings-backend.fly.dev",
+    "https://tarot-ai-readings-frontend.fly.dev"
 
 ]
 
@@ -69,11 +74,13 @@ CORS_ALLOW_HEADERS = [
 ]
 
 
-# CSRF_TRUSTED_ORIGINS = [
-#     "http://localhost:3000",
-#     "http://localhost:3100",
-#     "tarot-ai-readings.fly.dev",
-# ]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:3100",
+    "http://127.0.0.1",
+    "https://tarot-ai-readings-backend.fly.dev",
+    "https://tarot-ai-readings-frontend.fly.dev"
+]
 
 SWAGGER_SETTINGS = {
     "SECURITY_DEFINITIONS": {
