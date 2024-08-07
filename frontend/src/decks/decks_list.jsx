@@ -3,6 +3,8 @@ import NavBar from "../nav";
 import "./decks.css";
 import DecksBackground from "./background/decksBG.jsx";
 import sparkles from "./background/sparkles.gif";
+import add_icon from "../assets/add.png";
+import Tooltip from "../assets/tooltip2.jsx";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
@@ -73,7 +75,19 @@ function Decks() {
         <>
         <DecksBackground />
         <NavBar />
-        <h1 className="decks-list-title">Decks</h1>
+        <div className="title-add-container">
+            <h1 className="decks-list-title">Decks</h1>
+            <div className="tooltip-container">
+                <Tooltip content="Add a deck">
+                <img
+                    className="add_icon"
+                    src={add_icon}
+                    alt="add a card"
+                    onClick={() => navigate('/decks/create/')}
+                />
+                </Tooltip>
+            </div>
+        </div>
         <div className="flex-grid-container">
             <div className="flex-grid">
             {userDecks.map((deck, index) => (

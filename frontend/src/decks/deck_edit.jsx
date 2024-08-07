@@ -362,8 +362,7 @@ function DeckEdit() {
                 <th scope="col">Is Negative?</th>
                 </tr>
             </thead>
-            <tbody className="table-body">
-                <div ref={tableRef}>
+            <tbody ref={tableRef} className="table-body">
                 {newCards.map((card) => (
                     <CreateCard
                     key={card.id}
@@ -374,7 +373,6 @@ function DeckEdit() {
                     setNewCards={setNewCards}
                     />
                 ))}
-                </div>
                 {cards.map((card, index) => (
                 <>
                     <tr

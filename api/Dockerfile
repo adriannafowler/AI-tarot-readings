@@ -22,8 +22,8 @@ COPY . /app/
 # Copy the database dump file
 COPY /db_dump.sql /app/db_dump.sql
 
-# Collect static files (if you have any)
-# RUN python /app/manage.py collectstatic --noinput
+#Collect static files (if you have any)
+RUN python /app/manage.py collectstatic --noinput
 
 # Expose port 8000
 EXPOSE 8000

@@ -376,7 +376,7 @@ button:hover {
 }
 
 .create-deck-form-container {
-    width: 45%; 
+    width: 45%;
     padding-left: 50px;
     padding-bottom: 10px;
     margin: 0;
@@ -401,4 +401,11 @@ tr th {
 
 .cancel-button:hover {
     color: navy;
+}
+
+.title-add-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
 }

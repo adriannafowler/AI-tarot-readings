@@ -116,3 +116,4 @@ uvicorn==0.24.0.post1
 virtualenv==20.24.6
 wcwidth==0.2.6
 webencodings==0.5.1
+whitenoise==6.7.0

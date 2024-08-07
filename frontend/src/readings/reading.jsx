@@ -202,7 +202,7 @@ function Reading() {
             variants={readingVariants}
             >
             {chosenCards.map((card) => (
-                <figure className="card-img-top-display">
+                <figure key={card.id} className="card-img-top-display">
                 <img
                     key={card.id}
                     className="card-thumbnail"
