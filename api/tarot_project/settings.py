@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from drf_yasg import openapi
 from dotenv import load_dotenv
+import dj_database_url
 import os
 
 load_dotenv()
@@ -37,8 +38,6 @@ ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     "corsheaders",
-    # 'rest_framework',
-    # 'rest_framework.authtoken',
     "rest_framework",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
@@ -59,6 +58,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:3100",
     "http://localhost",
+    "https://tarot-ai-readings.fly.dev",
+    "http://tarot-ai-readings.fly.dev",
+
 ]
 
 CORS_ALLOW_HEADERS = [
@@ -67,10 +69,11 @@ CORS_ALLOW_HEADERS = [
 ]
 
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:3100",
-]
+# CSRF_TRUSTED_ORIGINS = [
+#     "http://localhost:3000",
+#     "http://localhost:3100",
+#     "tarot-ai-readings.fly.dev",
+# ]
 
 SWAGGER_SETTINGS = {
     "SECURITY_DEFINITIONS": {
@@ -90,15 +93,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
 }
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': [
-#         'rest_framework.authentication.TokenAuthentication',
-#         # 'rest_framework.authentication.SessionAuthentication',
-#     ],
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         'rest_framework.permissions.IsAuthenticated',
-#     ],
-# }
+
 from datetime import timedelta
 
 SIMPLE_JWT = {
@@ -144,16 +139,9 @@ WSGI_APPLICATION = "tarot_project.wsgi.application"
 
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB", "tarot_db"),
-        "USER": os.getenv("POSTGRES_USER", "tarot_user"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "password"),
-        "HOST": os.getenv(
-            "POSTGRES_HOST", "localhost"
-        ),  # Use 'localhost' or the service name in docker-compose.yml
-        "PORT": os.getenv("POSTGRES_PORT", "5432"),
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL')
+    )
 }
 
 
@@ -197,22 +185,6 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['console'],
-#             'level': 'DEBUG',
-#         },
-#     },
-# }
 
 LOGGING = {
     "version": 1,

@@ -10,10 +10,10 @@ import DeckCreate from "./decks/deck_create";
 import Reading from "./readings/reading";
 import ReadingHistory from "./readings/reading_hx";
 
-// const URL = import.meta.env.VITE_APP_API_HOST
-// if (!URL) {
-//     throw Error('VITE_APP_API_HOST was undefined')
-// }
+const URL = import.meta.env.VITE_APP_API_HOST
+if (!URL) {
+    throw Error('VITE_APP_API_HOST was undefined')
+}
 
 function App() {
   return (
