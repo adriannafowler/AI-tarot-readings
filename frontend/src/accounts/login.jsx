@@ -55,7 +55,7 @@ function LogIn() {
                     onChange={(e) =>
                         setUsername(e.target.value)
                     }
-
+                    autoComplete="username"
                     />
                 </div>
                 <div className="text_area">
@@ -68,7 +68,7 @@ function LogIn() {
                     onChange={(e) =>
                         setPassword(e.target.value)
                     }
-
+                    autoComplete="current-password"
                     />
                 </div>
                 {error && <p className="error">{error}</p>}

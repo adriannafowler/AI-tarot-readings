@@ -4,8 +4,8 @@
 }
 
 @font-face {
-  font-family: 'Inknut';
-  src: url('./assets/fonts/InknutAntiqua-Bold.ttf');
+  font-family: 'InknutAntiqua';
+  src: url('./assets/fonts/InknutAntiqua-Bold.ttf') format('truetype');
 }
 
 
@@ -50,7 +50,7 @@
 }
 
 .menu li a {
-  font-family: 'Inknut';
+  font-family: 'InknutAntiqua';
   font-size: 16px;
   color: #7648A1;
 }

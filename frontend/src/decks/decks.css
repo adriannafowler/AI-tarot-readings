@@ -9,8 +9,8 @@
 }
 
 @font-face {
-    font-family: 'Inknut';
-    src: url('./assets/fonts/InknutAntiqua-Bold.ttf');
+    font-family: 'InknutAntiqua';
+    src: url('../assets/fonts/InknutAntiqua-Bold.ttf') format('truetype');
 }
 
 button {
@@ -385,12 +385,12 @@ button:hover {
 }
 
 tr th {
-    font-family: 'Inknut';
+    font-family: 'InknutAntiqua';
     color: #7648A1;
 }
 
 .card-name {
-    font-family: 'Inknut';
+    font-family: 'InknutAntiqua';
     font-size: 12px;
     color: #7648A1;
 }

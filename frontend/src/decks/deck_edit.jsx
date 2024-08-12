@@ -270,7 +270,7 @@ function DeckEdit() {
             image_url: "",
             is_negative: false,
             name: "",
-            id: `new-${prev.length}`, // unique temporary ID for each new card
+            id: `new-${prev.length}`,
         },
         ...prev,
         ]);
@@ -371,10 +371,10 @@ function DeckEdit() {
                     onNewCardAdded={handleNewCardAdded}
                     newCards={newCards}
                     setNewCards={setNewCards}
+                    card={card}
                     />
                 ))}
                 {cards.map((card, index) => (
-                <>
                     <tr
                     key={card.id}
                     className={`hover-row ${
@@ -456,7 +456,6 @@ function DeckEdit() {
                         />
                     </td>
                     </tr>
-                </>
                 ))}
             </tbody>
             </table>

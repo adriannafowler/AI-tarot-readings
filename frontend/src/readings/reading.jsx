@@ -7,7 +7,8 @@ import NavBar from "../nav";
 import "./reading.css";
 import sparkles from "./background/sparkles2.gif";
 import DeckDropdown from "./dropdown.jsx";
-import gemnini_logo from '../assets/gemini.svg'
+import gemnini_logo from "../assets/gemini.svg";
+import loading from "./loading.gif";
 
 function Reading() {
     const [userDecks, setUserDecks] = useState([]);
@@ -17,7 +18,10 @@ function Reading() {
     const [chosenCards, setChosenCards] = useState([]);
     const [showReading, setShowReading] = useState(false);
     const [isButtonVisible, setIsButtonVisible] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
+    const [cardsFadedOut, setCardsFadedOut] = useState(false);
+    const [isBlocked, setIsBlocked] = useState(false);
     const token = localStorage.getItem("token");
     const navigate = useNavigate();
 
@@ -88,6 +92,9 @@ function Reading() {
 
         const data = await response.json();
         setReading(data);
+        setIsLoading(false);
+        setShowReading(true);
+        setIsBlocked(false);
         } catch (err) {
         console.error("Error during fetch:", err);
         }
@@ -162,18 +169,26 @@ function Reading() {
 
     useEffect(() => {
         if (chosenCards.length === 3) {
-        const timer = setTimeout(() => {
+        setIsLoading(true);
+
+        const loadingTimer = setTimeout(() => {
+            setIsLoading(false);
             setShowReading(true);
-        }, 4000);
-        return () => clearTimeout(timer);
+        }, 900);
+
+        return () => clearTimeout(loadingTimer);
         }
     }, [chosenCards]);
 
-    const cardVariants = {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1, transition: { delay: 1, duration: 1.5 } },
-        fadeOut: { opacity: 0, transition: { duration: 1.5 } },
-    };
+    useEffect(() => {
+        if (cardsFadedOut) {
+        const readingTimer = setTimeout(() => {
+            setShowReading(true);
+        }, 2000);
+
+        return () => clearTimeout(readingTimer);
+        }
+    }, [cardsFadedOut]);
 
     const readingVariants = {
         hidden: { opacity: 0, y: 50 },
@@ -189,6 +204,8 @@ function Reading() {
         <>
         <ReadingBackground />
         <NavBar />
+        {isBlocked && <div className="click-blocker" />}{" "}
+        {/* Click blocker overlay */}
         <div className="dd-and-cards-container">
             <DeckDropdown
             className="deck-dropdown"
@@ -214,7 +231,6 @@ function Reading() {
             ))}
             </motion.div>
         </div>
-
         <div className="reading-container">
             <AnimatePresence>
             {isButtonVisible && (
@@ -223,7 +239,12 @@ function Reading() {
                 onClick={() => {
                     if (currentDeck) {
                     setIsButtonVisible(false);
-                    fetchReading();
+                    setIsBlocked(true);
+
+                    setTimeout(() => {
+                        setIsLoading(true);
+                        fetchReading();
+                    }, 2000);
                     } else {
                     alert("Please select a deck first");
                     }
@@ -234,6 +255,7 @@ function Reading() {
                 animate={isButtonVisible ? "visible" : "hidden"}
                 exit="hidden"
                 variants={buttonVariants}
+                disabled={isBlocked} //
                 >
                 {isHovered && (
                     <img
@@ -246,28 +268,19 @@ function Reading() {
                 </motion.button>
             )}
             </AnimatePresence>
-            <div className="cards-container">
             <AnimatePresence>
-                {chosenCards.map((card, index) => (
+            {isLoading && (
                 <motion.div
-                    key={card.id}
-                    initial="hidden"
-                    animate={showReading ? "fadeOut" : "visible"}
-                    exit="hidden"
-                    variants={cardVariants}
-                    custom={index}
+                className="loading-gif-container"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 >
-                    <div className="reading-card">
-                    <img
-                        className="reading-card-image"
-                        src={card.image_url}
-                        alt={card.name}
-                    />
-                    <h3 className="big-chosen-card-name">{card.name}</h3>
-                    </div>
+                <img src={loading} alt="Loading" className="loading-gif" />
                 </motion.div>
-                ))}
+            )}
             </AnimatePresence>
+            <div className="cards-container">
             {showReading && (
                 <motion.div
                 className="reading-content"
@@ -280,7 +293,11 @@ function Reading() {
                 </motion.div>
             )}
             </div>
-            <img className="gemini-logo" src={gemnini_logo} alt="powered by google gemini" />
+            <img
+            className="gemini-logo"
+            src={gemnini_logo}
+            alt="powered by google gemini"
+            />
         </div>
         </>
     );

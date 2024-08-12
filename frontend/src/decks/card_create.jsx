@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useRef } from "react";
 
-function CreateCard({ deckID, token, onNewCardAdded, newCards, setNewCards }) {
+function CreateCard({ deckID, token, onNewCardAdded, newCards, setNewCards, card }) {
     const [hoveredRow, setHoveredRow] = useState(null);
     const tableRef = useRef(null);
 
