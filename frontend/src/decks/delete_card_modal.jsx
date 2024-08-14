@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-function DeleteModal({ cardTitle, imgURL, cardID, deckID, token, onCancel }) {
+function DeleteModal({ cardTitle, imgURL, cardID, deckID, token, onCancel, onDelete }) {
     const modalRef = useRef();
 
     const handleClickOutside = (event) => {
@@ -37,13 +37,15 @@ function DeleteModal({ cardTitle, imgURL, cardID, deckID, token, onCancel }) {
             console.error("Error Data:", errorData);
             throw new Error("Error editing deck");
         }
+        onDelete(cardID)
+        onCancel()
         } catch (err) {
         console.error("Error during card DELETE:", err);
         setError(err.message);
         }
 
         onCancel();
-        window.location.reload();
+        setCards()
     };
 
     return (

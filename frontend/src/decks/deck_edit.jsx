@@ -144,6 +144,10 @@ function DeckEdit() {
         });
     };
 
+    const handleDeleteCard = (cardID) => {
+        setCards((prevCards) => prevCards.filter((card) => card.id !== cardID));
+      };
+
     const openDeckDeleteModal = () => {
         setDeckModalVisible(true);
     };
@@ -477,6 +481,7 @@ function DeckEdit() {
             deckID={deckID}
             token={token}
             onCancel={closeDeckModal}
+            onDelete={handleDeleteCard}
             />
         )}
         </>
